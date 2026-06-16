@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loginter - Portal de Capacitación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rojo-loginter: #D90429;
+            --rojo-hover: #EF233C;
+            --gris-oscuro: #2B2D42;
+            --gris-texto: #8D99AE;
+            --gris-fondo: #EDF2F4;
+            --blanco: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gris-fondo);
+            margin: 0;
+            padding: 0;
+            color: var(--gris-oscuro);
+        }
+
+        header {
+            background-color: var(--blanco);
+            color: var(--gris-oscuro);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--rojo-loginter);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo-txt { font-weight: 700; margin: 0; }
+        .logo-txt span { color: var(--rojo-loginter); }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: var(--blanco);
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .card-login { text-align: center; max-width: 400px; margin: 100px auto; }
+
+        .btn-loginter {
+            background-color: var(--rojo-loginter);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-loginter:hover { background-color: var(--rojo-hover); }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 18px 0;
+            border: 2px solid #E2E8F0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .progress-bar-container {
+            background-color: #E2E8F0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 35px;
+        }
+
+        .progress-bar {
+            background-color: var(--rojo-loginter);
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .step-content { display: none; line-height: 1.7; font-size: 16px; }
+        .step-content.active { display: block; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 20px;
+        }
+
+        .btn-nav {
+            background-color: #E2E8F0;
+            color: var(--gris-oscuro);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-nav.next { background-color: var(--gris-oscuro); color: white; }
+        .btn-nav.next:hover { background-color: var(--rojo-loginter); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA</span></h2>
+        <div id="userInfo"></div>
+    </header>
+
+    <div id="loginSection" class="container card-login">
+        <i class="fa-solid fa-id-card" style="font-size: 50px; color: var(--rojo-loginter); margin-bottom: 10px;"></i>
+        <h3>Plataforma de Capacitación</h3>
+        <p style="color: var(--gris-texto)">Ingresa tu DNI para comenzar tu instrucción.</p>
+        <input type="number" id="dniInput" placeholder="Número de DNI sin puntos">
+        <button class="btn-loginter" id="btnIngresar">Ingresar</button>
+    </div>
+
+    <div id="appSection" class="container" style="display: none;">
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="dinamicModules">
+            <div id="loadingMessage"><i class="fa-solid fa-circle-notch fa-spin"></i> Cargando contenidos...</div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="btnAtras" disabled>Anterior</button>
+            <button class="btn-nav next" id="btnSiguiente">Siguiente</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "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",
+            authDomain: "loginter-capacitacion.firebaseapp.com",
+            projectId: "loginter-capacitacion",
+            storageBucket: "loginter-capacitacion.appspot.com",
+            messagingSenderId: "38472910284",
+            appId: "1:38472910284:web:a1b2c3d4e5f6g7h8i9j0k"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let usuarioDNI = "";
+        let pasoActual = 0;
+        let totalPasos = 0;
+        let modulosCargados = [];
+        let respuestasCorrectasTotales = 0;
+        let preguntasEvaluadasCount = 0;
+
+        const loginSection = document.getElementById('loginSection');
+        const appSection = document.getElementById('appSection');
+        const dniInput = document.getElementById('dniInput');
+        const btnIngresar = document.getElementById('btnIngresar');
+
+        btnIngresar.addEventListener('click', async () => {
+            usuarioDNI = dniInput.value.trim();
+            if(!usuarioDNI) return alert("DNI requerido");
+
+            const userRef = doc(db, "participantes", usuarioDNI);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    dni: usuarioDNI,
+                    pasoGuardado: 0,
+                    completado: false,
+                    pruebaAprobada: "Pendiente",
+                    fechaInicio: new Date()
+                });
+                pasoActual = 0;
+            } else {
+                pasoActual = userSnap.data().pasoGuardado || 0;
+            }
+
+            document.getElementById('userInfo').innerHTML = `<span><i class="fa-solid fa-user"></i> DNI: <strong>${usuarioDNI}</strong></span>`;
+            loginSection.style.display = 'none';
+            appSection.style.display = 'block';
+
+            await cargarContenidoYProgreso();
+        });
+
+        async function cargarContenidoYProgreso() {
+            const querySnapshot = await getDocs(collection(db, "modulos"));
+            modulosCargados = [];
+            preguntasEvaluadasCount = 0;
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                modulosCargados.push({ id: doc.id, ...data });
+                if(data.tipo === 'trivia') preguntasEvaluadasCount++;
+            });
+
+            modulosCargados.sort((a, b) => (a.orden || 0) - (b.orden || 0));
+            totalPasos = modulosCargados.length;
+            renderizarPaso();
+        }
+
+        function renderizarPaso() {
+            const container = document.getElementById('dinamicModules');
+            container.innerHTML = "";
+
+            const item = modulosCargados[pasoActual];
+            const div = document.createElement('div');
+            div.className = "step-content active";
+
+            if (item.tipo === 'trivia') {
+                div.innerHTML = `
+                    <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación del Módulo</h3>
+                    <p style="font-size:17px; font-weight:600;">${item.pregunta}</p>
+                    <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
+                        <input type="radio" name="triviaOpc" value="1"> ${item.opcionCorrecta}
+                    </label>
+                    <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
+                        <input type="radio" name="triviaOpc" value="2"> ${item.opcionIncorrecta}
+                    </label>
+                `;
+            } else {
+                div.innerHTML = `
+                    <h3 style="color: var(--rojo-loginter); margin-top:0;">${item.titulo}</h3>
+                    <p style="white-space: pre-wrap; color: #4A5568; font-size:16px;">${item.contenido}</p>
+                `;
+            }
+
+            container.appendChild(div);
+
+            document.getElementById('btnAtras').disabled = pasoActual === 0;
+            const porcentaje = totalPasos > 1 ? (pasoActual / (totalPasos - 1)) * 100 : 100;
+            document.getElementById('progressBar').style.width = `${porcentaje}%`;
+
+            if (pasoActual === totalPasos - 1) {
+                document.getElementById('btnSiguiente').textContent = "Finalizar Evaluación";
+            } else {
+                document.getElementById('btnSiguiente').textContent = "Siguiente";
+            }
+        }
+
+        document.getElementById('btnAtras').addEventListener('click', () => {
+            if (pasoActual > 0) {
+                pasoActual--;
+                renderizarPaso();
+            }
+        });
+
+        document.getElementById('btnSiguiente').addEventListener('click', async () => {
+            const item = modulosCargados[pasoActual];
+
+            if (item.tipo === 'trivia') {
+                const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
+                if (!seleccionada) return alert("Por favor, responde la pregunta para continuar.");
+
+                if (seleccionada.value === "1") {
+                    respuestasCorrectasTotales++;
+                }
+            }
+
+            if (pasoActual === totalPasos - 1) {
+                let resultadoPrueba = respuestasCorrectasTotales >= (preguntasEvaluadasCount / 2) ? "Aprobado" : "Desaprobado";
+
+                await updateDoc(doc(db, "participantes", usuarioDNI), {
+                    pasoGuardado: pasoActual,
+                    completado: true,
+                    pruebaAprobada: resultadoPrueba + ` (${respuestasCorrectasTotales}/${preguntasEvaluadasCount})`
+                });
+
+                alert(`Capacitación completada. Resultado final: ${resultadoPrueba} (${respuestasCorrectasTotales} correctas de ${preguntasEvaluadasCount})`);
+                location.reload();
+                return;
+            }
+
+            if (pasoActual < totalPasos - 1) {
+                pasoActual++;
+                await updateDoc(doc(db, "participantes", usuarioDNI), { pasoGuardado: pasoActual });
+                renderizarPaso();
+            }
+        });
+    </script>
+</body>
+</html>

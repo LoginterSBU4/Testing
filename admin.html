@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loginter - Panel Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rojo-loginter: #D90429;
+            --gris-oscuro: #2B2D42;
+            --gris-fondo: #EDF2F4;
+            --blanco: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gris-fondo);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--gris-oscuro);
+            color: white;
+            padding: 15px 30px;
+            border-bottom: 4px solid var(--rojo-loginter);
+        }
+
+        .admin-container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1.7fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 25px;
+        }
+
+        h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 14px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .seccion-pregunta {
+            background: #F8FAFC;
+            padding: 15px;
+            border-left: 4px solid var(--rojo-loginter);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #E2E8F0; }
+        th { background-color: var(--gris-oscuro); color: white; }
+
+        .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
+        .btn-submit:hover { background-color: #EF233C; }
+        
+        .select-acciones {
+            padding: 6px 10px;
+            background-color: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gris-oscuro);
+            cursor: pointer;
+            width: auto;
+        }
+
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .badge.success { background: #D4EDDA; color: #155724; }
+        .badge.warning { background: #FFF3CD; color: #856404; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2><i class="fa-solid fa-sliders"></i> Panel de administración de capacitaciones SBU4</h2>
+    </header>
+
+    <div class="admin-container">
+        <div class="grid">
+            
+            <div class="card">
+                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación y Cuestionario</h3>
+                <form id="formMultiPregunta">
+                    <label><strong>Título de la Capacitación</strong></label>
+                    <input type="text" id="tituloModulo" placeholder="Ej: Seguridad en autoelevadores" required>
+                    
+                    <label><strong>Orden del Módulo (Posición numérica)</strong></label>
+                    <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
+
+                    <label><strong>Texto Instructivo Guía (Contenido)</strong></label>
+                    <textarea id="contenidoModulo" rows="5" placeholder="Pega el manual o instructivo aquí..." required></textarea>
+
+                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación (Mínimo 2 Preguntas)</h4>
+
+                    <div class="seccion-pregunta">
+                        <strong>Pregunta 1 (Obligatoria)</strong>
+                        <input type="text" id="p1_preg" placeholder="¿Qué significa la señalización amarilla?" required>
+                        <input type="text" id="p1_corr" placeholder="Opción Correcta" required>
+                        <input type="text" id="p1_inc" placeholder="Opción Incorrecta" required>
+                    </div>
+
+                    <div class="seccion-pregunta">
+                        <strong>Pregunta 2 (Obligatoria)</strong>
+                        <input type="text" id="p2_preg" placeholder="¿Cuál es el límite de velocidad permitido?" required>
+                        <input type="text" id="p2_corr" placeholder="Opción Correcta" required>
+                        <input type="text" id="p2_inc" placeholder="Opción Incorrecta" required>
+                    </div>
+
+                    <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                        <strong>Pregunta 3 (Opcional)</strong>
+                        <input type="text" id="p3_preg" placeholder="Pregunta adicional de refuerzo">
+                        <input type="text" id="p3_corr" placeholder="Opción Correcta">
+                        <input type="text" id="p3_inc" placeholder="Opción Incorrecta">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Publicar Capacitación Completa</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>DNI</th>
+                                <th>Estado</th>
+                                <th>Resultado Examen</th>
+                                <th>Acciones de Control</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaParticipantes"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "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",
+            authDomain: "loginter-capacitacion.firebaseapp.com",
+            projectId: "loginter-capacitacion",
+            storageBucket: "loginter-capacitacion.appspot.com",
+            messagingSenderId: "38472910284",
+            appId: "1:38472910284:web:a1b2c3d4e5f6g7h8i9j0k"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('tituloModulo').value;
+            const orden = parseInt(document.getElementById('ordenModulo').value);
+            const contenido = document.getElementById('contenidoModulo').value;
+
+            try {
+                await addDoc(collection(db, "modulos"), { titulo, orden, contenido, tipo: 'lectura' });
+                await addDoc(collection(db, "modulos"), {
+                    orden: orden + 0.2,
+                    pregunta: document.getElementById('p1_preg').value,
+                    opcionCorrecta: document.getElementById('p1_corr').value,
+                    opcionIncorrecta: document.getElementById('p1_inc').value,
+                    tipo: 'trivia'
+                });
+                await addDoc(collection(db, "modulos"), {
+                    orden: orden + 0.4,
+                    pregunta: document.getElementById('p2_preg').value,
+                    opcionCorrecta: document.getElementById('p2_corr').value,
+                    opcionIncorrecta: document.getElementById('p2_inc').value,
+                    tipo: 'trivia'
+                });
+
+                const p3_preg = document.getElementById('p3_preg').value.trim();
+                const p3_corr = document.getElementById('p3_corr').value.trim();
+                const p3_inc = document.getElementById('p3_inc').value.trim();
+
+                if(p3_preg && p3_corr && p3_inc) {
+                    await addDoc(collection(db, "modulos"), {
+                        orden: orden + 0.6,
+                        pregunta: p3_preg,
+                        opcionCorrecta: p3_corr,
+                        opcionIncorrecta: p3_inc,
+                        tipo: 'trivia'
+                    });
+                }
+
+                alert("¡Publicado con éxito!");
+                location.reload();
+            } catch (err) { console.error(err); }
+        });
+
+        async function cargarRegistrosAdministracion() {
+            const tbody = document.getElementById('tablaParticipantes');
+            tbody.innerHTML = "";
+            const querySnapshot = await getDocs(collection(db, "participantes"));
+            
+            querySnapshot.forEach((docSnap) => {
+                const p = docSnap.data();
+                const id = docSnap.id;
+                const tr = document.createElement('tr');
+                const badgeEst = p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`;
+                let fechaFormateada = p.fechaInicio ? new Date(p.fechaInicio.seconds * 1000).toLocaleString() : "No registrada";
+
+                tr.innerHTML = `
+                    <td><strong>${p.dni}</strong></td>
+                    <td>${badgeEst}</td>
+                    <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
+                    <td>
+                        <select class="select-acciones" data-id="${id}" data-dni="${p.dni}" data-resultado="${p.pruebaAprobada || 'Pendiente'}" data-fecha="${fechaFormateada}">
+                            <option value="" disabled selected>Acciones...</option>
+                            <option value="ver">👁️ Ver respuestas</option>
+                            <option value="resetear">🔄 Resetear progreso</option>
+                            <option value="borrar">🗑️ Borrar registro</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.querySelectorAll('.select-acciones').forEach(select => {
+                select.addEventListener('change', async (e) => {
+                    const accion = e.target.value;
+                    const id = e.target.getAttribute('data-id');
+                    const dni = e.target.getAttribute('data-dni');
+                    const resultado = e.target.getAttribute('data-resultado');
+                    const fecha = e.target.getAttribute('data-fecha');
+
+                    if (accion === 'ver') {
+                        const ventanaRespuestas = window.open("", "_blank", "width=600,height=400");
+                        ventanaRespuestas.document.write(`
+                            <html>
+                            <head>
+                                <title>Reporte Loginter - Legajo ${dni}</title>
+                                <style>
+                                    body { font-family: 'Arial', sans-serif; padding: 30px; color: #2B2D42; background: #EDF2F4; }
+                                    .report-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #D90429; }
+                                    h2 { margin-top: 0; color: #2B2D42; font-size: 20px; text-transform: uppercase; }
+                                    p { font-size: 15px; margin: 12px 0; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px; }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="report-card">
+                                    <h2>LOGINTER SBU4 - Detalle de Cuestionario</h2>
+                                    <p><strong>Identificación (DNI):</strong> ${dni}</p>
+                                    <p><strong>Fecha de Validación:</strong> ${fecha}</p>
+                                    <p><strong>Dictamen de Evaluación:</strong> ${resultado}</p>
+                                </div>
+                            </body>
+                            </html>
+                        `);
+                        ventanaRespuestas.document.close();
+                    } else if (accion === 'resetear') {
+                        if (confirm(`¿Resetear progreso del DNI: ${dni}?`)) {
+                            await updateDoc(doc(db, "participantes", id), { pasoGuardado: 0, completado: false, pruebaAprobada: "Pendiente" });
+                            alert("Progreso reseteado."); cargarRegistrosAdministracion();
+                        }
+                    } else if (accion === 'borrar') {
+                        if (confirm(`¿Eliminar al DNI: ${dni}?`)) {
+                            await deleteDoc(doc(db, "participantes", id));
+                            alert("Registro eliminado."); cargarRegistrosAdministracion();
+                        }
+                    }
+                    e.target.value = "";
+                });
+            });
+        }
+        cargarRegistrosAdministracion();
+    </script>
+</body>
+</html>
