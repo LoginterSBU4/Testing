@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loginter - Panel Administrativo IA</title>
+    <title>Loginter - Panel Administrativo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -13,7 +13,6 @@
             --gris-oscuro: #2B2D42;
             --gris-fondo: #EDF2F4;
             --blanco: #FFFFFF;
-            --azul-ia: #4361EE;
         }
 
         body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
@@ -33,10 +32,6 @@
         .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
         .btn-submit:hover { background-color: #EF233C; }
         
-        .btn-ia { background: var(--azul-ia); color: white; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 15px; font-size: 13px; width: 100%; transition: 0.2s; }
-        .btn-ia:hover { background-color: #3046C5; }
-        .btn-ia:disabled { background-color: #94A3B8; cursor: not-allowed; }
-
         .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0;}
         .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge.success { background: #D4EDDA; color: #155724; }
@@ -53,19 +48,11 @@
     </header>
 
     <div class="admin-container">
-        
-        <div class="card" style="border-left: 5px solid var(--azul-ia);">
-            <h3 style="color: var(--azul-ia);"><i class="fa-solid fa-brain"></i> Configuración del Asistente de IA (Gemini)</h3>
-            <p style="font-size: 13px; margin: 0 0 10px 0; color: #475569;">
-                Ingresá tu clave de API de Google Gemini para habilitar la conversión automática de textos y creación de trivias dinámicas.
-            </p>
-            <input type="password" id="geminiApiKey" placeholder="Pegá acá tu tu API Key de Gemini (AIzaSy...)" style="margin: 0;">
-        </div>
-
         <div class="grid">
             
+            <!-- COLUMNA IZQUIERDA: FORMULARIO MULTI-CATEGORÍA -->
             <div class="card">
-                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación e IA</h3>
+                <h3><i class="fa-solid fa-folder-plus"></i> Publicar Nueva Capacitación</h3>
                 <form id="formMultiPregunta">
                     <label><strong>Título de la Capacitación 🎯</strong></label>
                     <input type="text" id="tituloModulo" placeholder="Ej: Operaciones Seguras de Autoelevadores" required>
@@ -77,38 +64,35 @@
                         <option value="Team Leader">Team Leader</option>
                         <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
                     </select>
-                    <span class="hint-text"><i class="fa-solid fa-info-circle"></i> Mantené presionado Ctrl o Cmd para elegir varios perfiles.</span>
+                    <span class="hint-text"><i class="fa-solid fa-info-circle"></i> Mantén presionado Ctrl (Windows) o Cmd (Mac) para elegir varias categorías.</span>
 
                     <label><strong>Orden de Módulo (Número entero) 🔢</strong></label>
                     <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
 
-                    <label><strong>Texto Instructivo Base / Contenido Crudo 📝</strong></label>
-                    <textarea id="contenidoModulo" rows="7" placeholder="Pegá acá el manual de Loginter técnico o aburrido tal cual viene..." required></textarea>
+                    <label><strong>Texto Instructivo / Contenido de Lectura 📝</strong></label>
+                    <textarea id="contenidoModulo" rows="7" placeholder="Escribe o pega aquí el material de estudio para el operario..." required></textarea>
 
-                    <button type="button" id="btnProcesarIA" class="btn-ia">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> ✨ Optimizar Contenido y Crear Trivia con IA
-                    </button>
-
-                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación (Auto-generado o manual)</h4>
+                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Cuestionario de Evaluación</h4>
 
                     <div class="seccion-pregunta">
-                        <strong>Pregunta 1 (Interactiva) 🤔</strong>
-                        <input type="text" id="p1_preg" placeholder="Esperando IA o carga manual..." required>
-                        <input type="text" id="p1_corr" placeholder="Opción Correcta 🟢" required>
-                        <input type="text" id="p1_inc" placeholder="Opción Incorrecta 🔵" required>
+                        <strong>Pregunta 1 🤔</strong>
+                        <input type="text" id="p1_preg" placeholder="Escribe la primera pregunta" required>
+                        <input type="text" id="p1_corr" placeholder="Respuesta Correcta 🟢" required>
+                        <input type="text" id="p1_inc" placeholder="Respuesta Incorrecta (Distractor) 🔵" required>
                     </div>
 
                     <div class="seccion-pregunta">
-                        <strong>Pregunta 2 (Interactiva) 🤔</strong>
-                        <input type="text" id="p2_preg" placeholder="Esperando IA o carga manual..." required>
-                        <input type="text" id="p2_corr" placeholder="Opción Correcta 🟢" required>
-                        <input type="text" id="p2_inc" placeholder="Opción Incorrecta 🔵" required>
+                        <strong>Pregunta 2 🤔</strong>
+                        <input type="text" id="p2_preg" placeholder="Escribe la segunda pregunta" required>
+                        <input type="text" id="p2_corr" placeholder="Respuesta Correcta 🟢" required>
+                        <input type="text" id="p2_inc" placeholder="Respuesta Incorrecta (Distractor) 🔵" required>
                     </div>
 
                     <button type="submit" class="btn-submit">Publicar Capacitación Completa 🚀</button>
                 </form>
             </div>
 
+            <!-- COLUMNA DERECHA: ASIGNACIÓN DE CATEGORÍA A OPERARIOS -->
             <div>
                 <div class="card">
                     <h3><i class="fa-solid fa-user-tag"></i> Asignar Categoría Especial a Legajo</h3>
@@ -128,6 +112,7 @@
                     </form>
                 </div>
 
+                <!-- SEGUIMIENTO DE OPERARIOS -->
                 <div class="card">
                     <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
                     <div style="overflow-x:auto; max-height: 250px;">
@@ -148,6 +133,7 @@
             </div>
         </div>
 
+        <!-- SECCIÓN INFERIOR: GESTOR DE CONTENIDOS COMPLETO -->
         <div class="card" style="margin-top: 20px;">
             <h3><i class="fa-solid fa-layer-group"></i> Panel Gestor de Contenidos y Módulos de Evaluación</h3>
             <div style="overflow-x:auto;">
@@ -184,96 +170,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 🧠 CONEXIÓN REFORZADA CON LA IA DE GOOGLE GEMINI ---
-        document.getElementById('btnProcesarIA').addEventListener('click', async () => {
-            const apiKey = document.getElementById('geminiApiKey').value.trim();
-            const contenidoCrudo = document.getElementById('contenidoModulo').value.trim();
-            const titulo = document.getElementById('tituloModulo').value.trim();
-
-            if (!apiKey) return alert("⚠️ Por favor, introduce tu Gemini API Key en el campo superior.");
-            if (!contenidoCrudo) return alert("⚠️ Escribe o pega algún contenido en el cuadro de texto antes de llamar a la IA.");
-
-            const btn = document.getElementById('btnProcesarIA');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y limpiando texto con IA...`;
-
-            const promptMaestro = `
-            Actúa como un instructor pedagógico experto en operaciones logísticas. 
-            Analiza el texto técnico de la capacitación llamada "${titulo}".
-            
-            Debes realizar obligatoriamente:
-            1. Reestructurar el texto para que sea dinámico, muy amigable, enfocado en operarios, usando viñetas claras, advertencias importantes y emojis amigables.
-            2. Crear exactamente 2 preguntas de opción múltiple interactiva basadas en situaciones reales o casos prácticos de depósito, no teóricas. Cada una tendrá una opción correcta y una incorrecta verosímil.
-
-            Devuelve el resultado estrictamente en este formato JSON plano, sin agregar palabras extras antes o después, ni usar bloques de código markdown (\`\`\`json):
-            {
-              "contenidoDidactico": "TEXTO_REESCRITO_CON_EMOJIS_Y_LINEAS",
-              "p1_pregunta": "Texto de la situación interactiva 1",
-              "p1_correcta": "Respuesta correcta a la situación 1",
-              "p1_incorrecta": "Respuesta incorrecta para la situación 1",
-              "p2_pregunta": "Texto de la situación interactiva 2",
-              "p2_correcta": "Respuesta correcta a la situación 2",
-              "p2_incorrecta": "Respuesta incorrecta para la situación 2"
-            }
-
-            Texto a procesar:
-            ${contenidoCrudo}
-            `;
-
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: promptMaestro }] }]
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (!data.candidates || data.candidates.length === 0) {
-                    throw new Error("La API Key no devolvió datos válidos o alcanzó el límite.");
-                }
-
-                let respuestaTexto = data.candidates[0].content.parts[0].text.trim();
-                
-                // 🛠️ FILTRO ANTIRROTURA INTEGRADO: Extrae solo lo que está entre llaves { } si la IA agrega basura
-                const inicioJSON = respuestaTexto.indexOf('{');
-                const finJSON = respuestaTexto.lastIndexOf('}');
-                
-                if (inicioJSON !== -1 && finJSON !== -1) {
-                    respuestaTexto = respuestaTexto.substring(inicioJSON, finJSON + 1);
-                }
-
-                const objetoResultado = JSON.parse(respuestaTexto);
-
-                // Auto-rellenar
-                document.getElementById('contenidoModulo').value = objetoResultado.contenidoDidactico;
-                document.getElementById('p1_preg').value = objetoResultado.p1_pregunta;
-                document.getElementById('p1_corr').value = objetoResultado.p1_correcta;
-                document.getElementById('p1_inc').value = objetoResultado.p1_incorrecta;
-                document.getElementById('p2_preg').value = objetoResultado.p2_pregunta;
-                document.getElementById('p2_corr').value = objetoResultado.p2_correcta;
-                document.getElementById('p2_inc').value = objetoResultado.p2_incorrecta;
-
-                alert("✨ ¡Contenido transformado y evaluaciones creadas con éxito! Revisa los campos antes de publicar.");
-
-            } catch (error) {
-                console.error("Detalle del error:", error);
-                alert("❌ Error al procesar con IA.\n\nVerifica:\n1. Que tu API Key sea válida.\n2. Que el manual copiado no sea demasiado corto.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ✨ Optimizar Contenido y Crear Trivia con IA`;
-            }
-        });
-
-        // --- FUNCIONALIDADES BASE DE FIREBASE ---
+        // Capturar múltiples categorías del selector
         function getSelectedCategories(selectElement) {
             return Array.from(selectElement.selectedOptions).map(opt => opt.value);
         }
 
+        // Publicar nueva capacitación estructurada de manera manual
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -282,7 +184,10 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
+                // Registrar material didáctico
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
+                
+                // Registrar pregunta de evaluación 1
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -291,6 +196,8 @@
                     opcionIncorrecta: document.getElementById('p1_inc').value,
                     tipo: 'trivia', estado: 'activo'
                 });
+                
+                // Registrar pregunta de evaluación 2
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -300,11 +207,12 @@
                     tipo: 'trivia', estado: 'activo'
                 });
 
-                alert("¡Publicado exitosamente!");
+                alert("¡Capacitación completa cargada y publicada con éxito!");
                 location.reload();
             } catch (err) { console.error(err); }
         });
 
+        // Configurar DNI y categorías asociadas
         document.getElementById('formAsignarCategoria').addEventListener('submit', async (e) => {
             e.preventDefault();
             const dni = document.getElementById('catDniInput').value.trim();
@@ -318,12 +226,13 @@
                     pruebaAprobada: "Pendiente",
                     historialCursos: {}
                 }, { merge: true });
-                alert(`DNI ${dni} configurado como ${categoria}`);
+                alert(`DNI ${dni} configurado correctamente como ${categoria}`);
                 location.reload();
             } catch(err) { console.error(err); }
         });
 
         async function cargarDatosAdmin() {
+            // CARGAR TABLA PARTICIPANTES (OPERARIOS)
             const tbodyPart = document.getElementById('tablaParticipantes');
             tbodyPart.innerHTML = "";
             const snapPart = await getDocs(collection(db, "participantes"));
@@ -347,6 +256,7 @@
                 tbodyPart.appendChild(tr);
             });
 
+            // Escuchar cambios de acciones sobre los participantes
             document.querySelectorAll('.select-acciones').forEach(sel => {
                 sel.addEventListener('change', async (e) => {
                     const acc = e.target.value; const id = e.target.getAttribute('data-id'); const dni = e.target.getAttribute('data-dni');
@@ -361,7 +271,7 @@
                             }
                         });
                         const w = window.open("", "_blank", "width=500,height=400");
-                        w.document.write(`<html><body><h3>Cursos de Legajo: ${dni}</h3>${textoHistorial || '<p>Sin registros avanzados.</p>'}</body></html>`);
+                        w.document.write(`<html><head><style>body{font-family:sans-serif;padding:20px;}</style></head><body><h3>Historial de Cursos - Legajo: ${dni}</h3>${textoHistorial || '<p>Sin registros avanzados.</p>'}</body></html>`);
                         w.document.close();
                     } else if (acc === 'cambiar') {
                         const nuevaCat = prompt("Elige la nueva categoría (Rep, PS, Team Leader, Jefe/Responsable/Gerente):");
@@ -370,12 +280,13 @@
                             location.reload();
                         }
                     } else if (acc === 'borrar') {
-                        if(confirm("¿Eliminar?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
+                        if(confirm("¿Eliminar registro?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
                     }
                     e.target.value = "";
                 });
             });
 
+            // GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
             const tbodyMod = document.getElementById('tablaModulos');
             tbodyMod.innerHTML = "";
             const snapMod = await getDocs(collection(db, "modulos"));
@@ -411,6 +322,7 @@
                 tbodyMod.appendChild(tr);
             });
 
+            // Pausar o reanudar
             document.querySelectorAll('.btn-status').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -420,15 +332,17 @@
                 });
             });
 
+            // Borrar componente
             document.querySelectorAll('.btn-del-mod').forEach(b => {
                 b.addEventListener('click', async (e) => {
-                    if(confirm("¿Eliminar componente?")) {
+                    if(confirm("¿Eliminar componente de estudio?")) {
                         await deleteDoc(doc(db, "modulos", e.target.getAttribute('data-id')));
                         location.reload();
                     }
                 });
             });
 
+            // Editar contenido textual
             document.querySelectorAll('.btn-edit').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -445,6 +359,7 @@
                 });
             });
 
+            // Editar categorías del módulo en vivo
             document.querySelectorAll('.btn-edit-cat').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
