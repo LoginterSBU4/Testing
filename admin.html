@@ -161,22 +161,24 @@
         </div>
     </div>
 
-    <script type="module">
+   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "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",
-            authDomain: "loginter-capacitacion.firebaseapp.com",
-            projectId: "loginter-capacitacion",
-            storageBucket: "loginter-capacitacion.appspot.com",
-            messagingSenderId: "38472910284",
-            appId: "1:38472910284:web:a1b2c3d4e5f6g7h8i9j0k"
+        // CONFIGURACIÓN OFICIAL DE FIRESTORE CON TU API KEY SUMINISTRADA
+        const firebaseConfig = {            
+            apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",            
+            authDomain: "loginter-capacitacion.firebaseapp.com",            
+            projectId: "loginter-capacitacion",            
+            storageBucket: "loginter-capacitacion.appspot.com",            
+            messagingSenderId: "38472910284",            
+            appId: "1:38472910284:web:a1b2c3d4e5f6g7h8i9j0k"        
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // EVENTO: PUBLICAR NUEVA CAPACITACIÓN Y CUESTIONARIO
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -184,7 +186,10 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
+                // 1. Guardar el material de lectura guía
                 await addDoc(collection(db, "modulos"), { titulo, orden, contenido, tipo: 'lectura' });
+                
+                // 2. Guardar Pregunta 1 Obligatoria
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
                     pregunta: document.getElementById('p1_preg').value,
@@ -192,6 +197,8 @@
                     opcionIncorrecta: document.getElementById('p1_inc').value,
                     tipo: 'trivia'
                 });
+
+                // 3. Guardar Pregunta 2 Obligatoria
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
                     pregunta: document.getElementById('p2_preg').value,
@@ -200,11 +207,12 @@
                     tipo: 'trivia'
                 });
 
+                // 4. Guardar Pregunta 3 Opcional (si se rellenaron los campos)
                 const p3_preg = document.getElementById('p3_preg').value.trim();
                 const p3_corr = document.getElementById('p3_corr').value.trim();
                 const p3_inc = document.getElementById('p3_inc').value.trim();
 
-                if(p3_preg && p3_corr && p3_inc) {
+                if (p3_preg && p3_corr && p3_inc) {
                     await addDoc(collection(db, "modulos"), {
                         orden: orden + 0.6,
                         pregunta: p3_preg,
@@ -214,39 +222,66 @@
                     });
                 }
 
-                alert("¡Publicado con éxito!");
+                alert("¡Capacitación Loginter SBU4 registrada correctamente!");
+                document.getElementById('formMultiPregunta').reset();
                 location.reload();
-            } catch (err) { console.error(err); }
+            } catch (err) { 
+                console.error("Error en Firebase:", err); 
+                alert("Ocurrió un error de conexión al intentar guardar. Revisa la consola.");
+            }
         });
 
+        // FUNCIÓN: CARGAR CAPACITADOS DE LA COLECCIÓN 'PARTICIPANTES'
         async function cargarRegistrosAdministracion() {
             const tbody = document.getElementById('tablaParticipantes');
             tbody.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "participantes"));
             
-            querySnapshot.forEach((docSnap) => {
-                const p = docSnap.data();
-                const id = docSnap.id;
-                const tr = document.createElement('tr');
-                const badgeEst = p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`;
-                let fechaFormateada = p.fechaInicio ? new Date(p.fechaInicio.seconds * 1000).toLocaleString() : "No registrada";
+            try {
+                const querySnapshot = await getDocs(collection(db, "participantes"));
+                
+                // Validación visual si la base de datos no tiene operarios cargados aún
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748B; padding:20px;">Esperando que los capacitados registren su DNI desde la app de pruebas...</td></tr>`;
+                    return;
+                }
+                            
+                querySnapshot.forEach((docSnap) => {
+                    const p = docSnap.data();
+                    const id = docSnap.id;
+                    const tr = document.createElement('tr');
+                    
+                    const badgeEst = p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`;
+                    
+                    let fechaFormateada = "No registrada";
+                    if (p.fechaInicio) {
+                        fechaFormateada = p.fechaInicio.seconds ? new Date(p.fechaInicio.seconds * 1000).toLocaleString() : new Date(p.fechaInicio).toLocaleString();
+                    }
 
-                tr.innerHTML = `
-                    <td><strong>${p.dni}</strong></td>
-                    <td>${badgeEst}</td>
-                    <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
-                    <td>
-                        <select class="select-acciones" data-id="${id}" data-dni="${p.dni}" data-resultado="${p.pruebaAprobada || 'Pendiente'}" data-fecha="${fechaFormateada}">
-                            <option value="" disabled selected>Acciones...</option>
-                            <option value="ver">👁️ Ver respuestas</option>
-                            <option value="resetear">🔄 Resetear progreso</option>
-                            <option value="borrar">🗑️ Borrar registro</option>
-                        </select>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+                    tr.innerHTML = `
+                        <td><strong>${p.dni || 'S/D'}</strong></td>
+                        <td>${badgeEst}</td>
+                        <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
+                        <td>
+                            <select class="select-acciones" data-id="${id}" data-dni="${p.dni || 'S/D'}" data-resultado="${p.pruebaAprobada || 'Pendiente'}" data-fecha="${fechaFormateada}">
+                                <option value="" disabled selected>Acciones...</option>
+                                <option value="ver">👁️ Ver respuestas</option>
+                                <option value="resetear">🔄 Resetear progreso</option>
+                                <option value="borrar">🗑️ Borrar registro</option>
+                            </select>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
 
+                asignarEventosAcciones();
+            } catch (error) {
+                console.error("Error al traer colección 'participantes':", error);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--rojo-loginter); padding:20px;">Error al conectar. Verifica las reglas de lectura de tu base de datos Firestore.</td></tr>`;
+            }
+        }
+
+        // FUNCIÓN: MANIPULACIÓN DE REGISTROS DE CAPACITADOS
+        function asignarEventosAcciones() {
             document.querySelectorAll('.select-acciones').forEach(select => {
                 select.addEventListener('change', async (e) => {
                     const accion = e.target.value;
@@ -280,20 +315,24 @@
                         `);
                         ventanaRespuestas.document.close();
                     } else if (accion === 'resetear') {
-                        if (confirm(`¿Resetear progreso del DNI: ${dni}?`)) {
+                        if (confirm(`¿Desea resetear a estado inicial el progreso del DNI: ${dni}?`)) {
                             await updateDoc(doc(db, "participantes", id), { pasoGuardado: 0, completado: false, pruebaAprobada: "Pendiente" });
-                            alert("Progreso reseteado."); cargarRegistrosAdministracion();
+                            alert("Progreso reestablecido."); 
+                            cargarRegistrosAdministracion();
                         }
                     } else if (accion === 'borrar') {
-                        if (confirm(`¿Eliminar al DNI: ${dni}?`)) {
+                        if (confirm(`¿Eliminar definitivamente el registro del DNI: ${dni}?`)) {
                             await deleteDoc(doc(db, "participantes", id));
-                            alert("Registro eliminado."); cargarRegistrosAdministracion();
+                            alert("Registro eliminado de la base de datos."); 
+                            cargarRegistrosAdministracion();
                         }
                     }
                     e.target.value = "";
                 });
             });
         }
+
+        // Ejecución inicial automática de la tabla
         cargarRegistrosAdministracion();
     </script>
 </body>
