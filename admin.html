@@ -123,29 +123,6 @@
             background-color: #EF233C; 
         }
         
-        .btn-sheets { 
-            background: var(--verde-sheets); 
-            color: white; 
-            border: none; 
-            padding: 12px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            width: 100%; 
-            font-size: 14px; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            text-decoration: none; 
-            margin-bottom: 15px; 
-            box-sizing: border-box;
-        }
-        
-        .btn-sheets:hover { 
-            background-color: #0b592e; 
-        }
-
         .select-acciones { 
             padding: 4px; 
             font-size: 12px; 
@@ -231,18 +208,17 @@
 
             <!-- COLUMNA DERECHA: CONEXIÓN GOOGLE SHEETS Y PARTICIPANTES -->
             <div>
-                <div class="card">
+                <div class="card" style="border-left: 4px solid var(--verde-sheets);">
                     <h3><i class="fa-solid fa-file-excel"></i> Control de Legajos e Identificación (Sheets)</h3>
                     <p style="font-size: 13px; color: #475569; margin-top: 0; line-height: 1.5;">
-                        Para agregar, modificar o dar de baja personal de SBU4, edita directamente las columnas de <strong>NOMBRE, APELLIDO, DNI y CARGO</strong> en la planilla centralizada de Google Sheets.
+                        Pega el enlace de tu planilla de Google Sheets. Asegúrate de que el documento esté configurado para compartir como <strong>"Cualquier persona con el enlace puede ver"</strong>. El archivo debe contener las columnas: <strong>NOMBRE, APELLIDO, DNI, CARGO</strong>.
                     </p>
                     
-                    <a href="https://docs.google.com/spreadsheets/d/1Zt97U6OonV_F_Tdfv_b2w9OitX9V-l90vE2r5Bv7-S0/edit" target="_blank" class="btn-sheets">
-                        <i class="fa-solid fa-file-invoice"></i> Abrir Maestro de Personal en Google Sheets
-                    </a>
+                    <label><strong>Enlace del Maestro de Personal (Google Sheets) 🔗</strong></label>
+                    <input type="text" id="sheetsUrlInput" placeholder="https://docs.google.com/spreadsheets/d/..." style="margin-bottom: 15px;">
 
-                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--gris-oscuro);">
-                        <i class="fa-solid fa-arrows-rotate"></i> Actualizar Cambios del Personal
+                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--verde-sheets);">
+                        <i class="fa-solid fa-arrows-rotate"></i> Sincronizar y Actualizar Personal
                     </button>
                 </div>
 
@@ -290,7 +266,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Configuración real y autenticada de Firebase
         const firebaseConfig = {
@@ -309,20 +285,127 @@
             return Array.from(selectElement.selectedOptions).map(opt => opt.value);
         }
 
-        // Simulación visual de guardado/sincronización
-        document.getElementById('btnSincronizar').addEventListener('click', () => {
+        // Extrae el ID único del Spreadsheet a partir de la URL
+        function extractSpreadsheetId(url) {
+            const matches = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+            return matches ? matches[1] : null;
+        }
+
+        // Función robusta para parsear texto CSV de Google Sheets
+        function parseCSV(text) {
+            const lines = [];
+            let row = [""];
+            lines.push(row);
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                let next = text[i+1];
+                if (c === '"') {
+                    if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+                    else { inQuotes = !inQuotes; }
+                } else if (c === ',' && !inQuotes) {
+                    row.push('');
+                } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                    if (c === '\r' && next === '\n') { i++; }
+                    row = [''];
+                    lines.push(row);
+                } else {
+                    row[row.length - 1] += c;
+                }
+            }
+            return lines.filter(r => r.length > 1 || (r[0] && r[0].trim() !== ""));
+        }
+
+        // Sincronización Real con Google Sheets
+        document.getElementById('btnSincronizar').addEventListener('click', async () => {
+            const urlInput = document.getElementById('sheetsUrlInput').value.trim();
+            if (!urlInput) {
+                return alert("⚠️ Por favor, pega primero el enlace de Google Sheets.");
+            }
+
+            const spreadsheetId = extractSpreadsheetId(urlInput);
+            if (!spreadsheetId) {
+                return alert("⚠️ El enlace ingresado no parece ser un link válido de Google Sheets. Asegúrate de copiar el enlace de la barra de direcciones del navegador.");
+            }
+
             const btn = document.getElementById('btnSincronizar');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando filas del Sheets...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Conectando y Sincronizando...`;
             btn.disabled = true;
-            setTimeout(() => {
-                alert("🔄 ¡Los cargos y legajos modificados en Google Sheets se han sincronizado con la base de datos de la Academia!");
-                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Actualizar Cambios del Personal`;
-                btn.disabled = false;
+
+            try {
+                // Endpoint para descargar el CSV público del Google Sheet
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error("No se pudo descargar el archivo. Verifica que esté compartido públicamente como 'Cualquier persona con el enlace puede ver'.");
+                }
+
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+
+                if (rows.length < 2) {
+                    throw new Error("El archivo está vacío o no contiene suficientes filas.");
+                }
+
+                // Identificar cabeceras de columnas
+                const headers = rows[0].map(h => h.trim().toUpperCase());
+                const indexDni = headers.indexOf("DNI");
+                const indexNombre = headers.indexOf("NOMBRE");
+                const indexApellido = headers.indexOf("APELLIDO");
+                const indexCargo = headers.indexOf("CARGO");
+
+                if (indexDni === -1 || indexCargo === -1) {
+                    throw new Error("No se encontraron las columnas esenciales 'DNI' y 'CARGO'. Asegúrate de que las cabeceras estén escritas exactamente igual en la primera fila.");
+                }
+
+                let insertadosCount = 0;
+                let promesasCarga = [];
+
+                // Recorrer filas de datos (omitiendo la cabecera)
+                for (let i = 1; i < rows.length; i++) {
+                    const columns = rows[i];
+                    if (columns.length < Math.max(indexDni, indexCargo) + 1) continue;
+
+                    const dniVal = columns[indexDni].trim().replace(/\D/g, ''); // Limpiar puntos, guiones o espacios
+                    const cargoVal = columns[indexCargo].trim();
+                    const nombreVal = indexNombre !== -1 ? columns[indexNombre].trim() : "";
+                    const apellidoVal = indexApellido !== -1 ? columns[indexApellido].trim() : "";
+
+                    if (!dniVal || !cargoVal) continue;
+
+                    // Subir o fusionar datos en Firestore
+                    const userRef = doc(db, "participantes", dniVal);
+                    promesasCarga.push(setDoc(userRef, {
+                        dni: dniVal,
+                        nombre: nombreVal,
+                        apellido: apellidoVal,
+                        categoria: cargoVal
+                    }, { merge: true }));
+
+                    insertadosCount++;
+                }
+
+                // Guardar la URL en la configuración de la base de datos para persistencia del Admin
+                const configRef = doc(db, "configuracion", "general");
+                promesasCarga.push(setDoc(configRef, { sheetsUrl: urlInput }, { merge: true }));
+
+                await Promise.all(promesasCarga);
+
+                alert(`🔄 ¡Sincronización Completada!\nSe procesaron y cargaron ${insertadosCount} legajos de personal con sus respectivos cargos.`);
                 location.reload();
-            }, 1200);
+
+            } catch (error) {
+                console.error("Error de sincronización:", error);
+                alert(`❌ Error al sincronizar con Google Sheets.\n\nDetalle: ${error.message}`);
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sincronizar y Actualizar Personal`;
+                btn.disabled = false;
+            }
         });
 
-        // Publicar nueva capacitación estructurada
+        // Publicar nueva capacitación
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -331,10 +414,7 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
-                // Registrar diapositiva de lectura instructiva
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
-                
-                // Registrar pregunta 1
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -343,8 +423,6 @@
                     opcionIncorrecta: document.getElementById('p1_inc').value,
                     tipo: 'trivia', estado: 'activo'
                 });
-                
-                // Registrar pregunta 2
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -359,16 +437,30 @@
             } catch (err) { console.error(err); }
         });
 
-        // Cargar registros del panel administrativo en tiempo real
         async function cargarDatosAdmin() {
+            // Cargar link guardado de Sheets si existe
+            try {
+                const configSnap = await getDoc(doc(db, "configuracion", "general"));
+                if (configSnap.exists() && configSnap.data().sheetsUrl) {
+                    document.getElementById('sheetsUrlInput').value = configSnap.data().sheetsUrl;
+                }
+            } catch (e) { console.log("Configuración inicial no encontrada."); }
+
             const tbodyPart = document.getElementById('tablaParticipantes');
             tbodyPart.innerHTML = "";
             const snapPart = await getDocs(collection(db, "participantes"));
             snapPart.forEach(docSnap => {
                 const p = docSnap.data();
                 const tr = document.createElement('tr');
+                
+                // Mostrar Apellido y Nombre junto al DNI si existen en Firestore
+                let identificacionStr = p.dni;
+                if (p.nombre || p.apellido) {
+                    identificacionStr += ` <br><span style="font-size:11px;color:#64748B;">${p.apellido || ''}, ${p.nombre || ''}</span>`;
+                }
+
                 tr.innerHTML = `
-                    <td><strong>${p.dni}</strong></td>
+                    <td><strong>${identificacionStr}</strong></td>
                     <td><span class="badge info">${p.categoria || 'Rep'}</span></td>
                     <td>${p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`}</td>
                     <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
@@ -448,7 +540,6 @@
                 tbodyMod.appendChild(tr);
             });
 
-            // Escuchadores de controles del Gestor de Contenidos
             document.querySelectorAll('.btn-status').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
