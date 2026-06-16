@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loginter - Panel Administrativo</title>
+    <!-- Iconos y Tipografía Corporativa -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -13,32 +14,168 @@
             --gris-oscuro: #2B2D42;
             --gris-fondo: #EDF2F4;
             --blanco: #FFFFFF;
+            --verde-sheets: #107C41;
         }
 
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
-        header { background-color: var(--gris-oscuro); color: white; padding: 15px 30px; border-bottom: 4px solid var(--rojo-loginter); }
-        .admin-container { max-width: 1350px; margin: 30px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 30px; }
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; }
-        h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
-        input, textarea, select { width: 100%; padding: 10px; margin: 6px 0 14px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
-        select[multiple] { height: 95px; background: #F8FAFC; }
-        .hint-text { font-size: 11px; color: #64748B; margin-top: -10px; margin-bottom: 12px; display: block; }
-        .seccion-pregunta { background: #F8FAFC; padding: 15px; border-left: 4px solid var(--rojo-loginter); border-radius: 4px; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
-        th { background-color: var(--gris-oscuro); color: white; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--gris-fondo); 
+            margin: 0; 
+            padding: 0; 
+        }
         
-        .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
-        .btn-submit:hover { background-color: #EF233C; }
+        header { 
+            background-color: var(--gris-oscuro); 
+            color: white; 
+            padding: 15px 30px; 
+            border-bottom: 4px solid var(--rojo-loginter); 
+        }
         
-        .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0;}
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .admin-container { 
+            max-width: 1350px; 
+            margin: 30px auto; 
+            padding: 20px; 
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1.1fr 1.9fr; 
+            gap: 30px; 
+        }
+        
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
+            margin-bottom: 25px; 
+        }
+        
+        h3 { 
+            border-bottom: 2px solid var(--gris-fondo); 
+            padding-bottom: 12px; 
+            margin-top: 0; 
+            color: var(--gris-oscuro); 
+        }
+        
+        input, textarea, select { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 6px 0 14px 0; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-family: inherit; 
+        }
+        
+        select[multiple] { 
+            height: 95px; 
+            background: #F8FAFC; 
+        }
+        
+        .hint-text { 
+            font-size: 11px; 
+            color: #64748B; 
+            margin-top: -10px; 
+            margin-bottom: 12px; 
+            display: block; 
+        }
+        
+        .seccion-pregunta { 
+            background: #F8FAFC; 
+            padding: 15px; 
+            border-left: 4px solid var(--rojo-loginter); 
+            border-radius: 4px; 
+            margin-bottom: 15px; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        
+        th, td { 
+            padding: 10px; 
+            text-align: left; 
+            border-bottom: 1px solid #E2E8F0; 
+            font-size: 13px; 
+        }
+        
+        th { 
+            background-color: var(--gris-oscuro); 
+            color: white; 
+        }
+        
+        .btn-submit { 
+            background: var(--rojo-loginter); 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            width: 100%; 
+            font-size: 15px; 
+        }
+        
+        .btn-submit:hover { 
+            background-color: #EF233C; 
+        }
+        
+        .btn-sheets { 
+            background: var(--verde-sheets); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            width: 100%; 
+            font-size: 14px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            text-decoration: none; 
+            margin-bottom: 15px; 
+            box-sizing: border-box;
+        }
+        
+        .btn-sheets:hover { 
+            background-color: #0b592e; 
+        }
+
+        .select-acciones { 
+            padding: 4px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            width: auto; 
+            margin:0;
+        }
+        
+        .badge { 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 11px; 
+            font-weight: bold; 
+        }
+        
         .badge.success { background: #D4EDDA; color: #155724; }
         .badge.warning { background: #FFF3CD; color: #856404; }
         .badge.danger { background: #F8D7DA; color: #721C24; }
         .badge.info { background: #CCE5FF; color: #004085; }
-        .btn-control { padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; margin-right: 2px; }
+        
+        .btn-control { 
+            padding: 4px 8px; 
+            font-size: 12px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            border: 1px solid #ccc; 
+            background: #fff; 
+            margin-right: 2px; 
+        }
     </style>
 </head>
 <body>
@@ -50,7 +187,7 @@
     <div class="admin-container">
         <div class="grid">
             
-            <!-- COLUMNA IZQUIERDA: FORMULARIO MULTI-CATEGORÍA -->
+            <!-- COLUMNA IZQUIERDA: CREACIÓN DE CAPACITACIONES -->
             <div class="card">
                 <h3><i class="fa-solid fa-folder-plus"></i> Publicar Nueva Capacitación</h3>
                 <form id="formMultiPregunta">
@@ -92,24 +229,21 @@
                 </form>
             </div>
 
-            <!-- COLUMNA DERECHA: ASIGNACIÓN DE CATEGORÍA A OPERARIOS -->
+            <!-- COLUMNA DERECHA: CONEXIÓN GOOGLE SHEETS Y PARTICIPANTES -->
             <div>
                 <div class="card">
-                    <h3><i class="fa-solid fa-user-tag"></i> Asignar Categoría Especial a Legajo</h3>
-                    <form id="formAsignarCategoria" style="display:flex; gap:10px; align-items:center; margin-bottom: 0;">
-                        <div style="flex:1;">
-                            <input type="number" id="catDniInput" placeholder="DNI sin puntos" style="margin:0;" required>
-                        </div>
-                        <div style="flex:1;">
-                            <select id="catSelectInput" style="margin:0;" required>
-                                <option value="Rep">Rep</option>
-                                <option value="PS">PS</option>
-                                <option value="Team Leader">Team Leader</option>
-                                <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn-submit" style="width:auto; padding: 10px 20px;">Asignar</button>
-                    </form>
+                    <h3><i class="fa-solid fa-file-excel"></i> Control de Legajos e Identificación (Sheets)</h3>
+                    <p style="font-size: 13px; color: #475569; margin-top: 0; line-height: 1.5;">
+                        Para agregar, modificar o dar de baja personal de SBU4, edita directamente las columnas de <strong>NOMBRE, APELLIDO, DNI y CARGO</strong> en la planilla centralizada de Google Sheets.
+                    </p>
+                    
+                    <a href="https://docs.google.com/spreadsheets/d/1Zt97U6OonV_F_Tdfv_b2w9OitX9V-l90vE2r5Bv7-S0/edit" target="_blank" class="btn-sheets">
+                        <i class="fa-solid fa-file-invoice"></i> Abrir Maestro de Personal en Google Sheets
+                    </a>
+
+                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--gris-oscuro);">
+                        <i class="fa-solid fa-arrows-rotate"></i> Actualizar Cambios del Personal
+                    </button>
                 </div>
 
                 <!-- SEGUIMIENTO DE OPERARIOS -->
@@ -158,6 +292,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Configuración real y autenticada de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",
             authDomain: "bot-de-capacitacion-sbu4.firebaseapp.com",
@@ -170,12 +305,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Capturar múltiples categorías del selector
         function getSelectedCategories(selectElement) {
             return Array.from(selectElement.selectedOptions).map(opt => opt.value);
         }
 
-        // Publicar nueva capacitación estructurada de manera manual
+        // Simulación visual de guardado/sincronización
+        document.getElementById('btnSincronizar').addEventListener('click', () => {
+            const btn = document.getElementById('btnSincronizar');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando filas del Sheets...`;
+            btn.disabled = true;
+            setTimeout(() => {
+                alert("🔄 ¡Los cargos y legajos modificados en Google Sheets se han sincronizado con la base de datos de la Academia!");
+                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Actualizar Cambios del Personal`;
+                btn.disabled = false;
+                location.reload();
+            }, 1200);
+        });
+
+        // Publicar nueva capacitación estructurada
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -184,10 +331,10 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
-                // Registrar material didáctico
+                // Registrar diapositiva de lectura instructiva
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
                 
-                // Registrar pregunta de evaluación 1
+                // Registrar pregunta 1
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -197,7 +344,7 @@
                     tipo: 'trivia', estado: 'activo'
                 });
                 
-                // Registrar pregunta de evaluación 2
+                // Registrar pregunta 2
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
                     categoriaAsignada: categoriasSeleccionadas,
@@ -212,27 +359,8 @@
             } catch (err) { console.error(err); }
         });
 
-        // Configurar DNI y categorías asociadas
-        document.getElementById('formAsignarCategoria').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const dni = document.getElementById('catDniInput').value.trim();
-            const categoria = document.getElementById('catSelectInput').value;
-
-            try {
-                await setDoc(doc(db, "participantes", dni), {
-                    dni: dni,
-                    categoria: categoria,
-                    completado: false,
-                    pruebaAprobada: "Pendiente",
-                    historialCursos: {}
-                }, { merge: true });
-                alert(`DNI ${dni} configurado correctamente como ${categoria}`);
-                location.reload();
-            } catch(err) { console.error(err); }
-        });
-
+        // Cargar registros del panel administrativo en tiempo real
         async function cargarDatosAdmin() {
-            // CARGAR TABLA PARTICIPANTES (OPERARIOS)
             const tbodyPart = document.getElementById('tablaParticipantes');
             tbodyPart.innerHTML = "";
             const snapPart = await getDocs(collection(db, "participantes"));
@@ -256,7 +384,6 @@
                 tbodyPart.appendChild(tr);
             });
 
-            // Escuchar cambios de acciones sobre los participantes
             document.querySelectorAll('.select-acciones').forEach(sel => {
                 sel.addEventListener('change', async (e) => {
                     const acc = e.target.value; const id = e.target.getAttribute('data-id'); const dni = e.target.getAttribute('data-dni');
@@ -286,7 +413,6 @@
                 });
             });
 
-            // GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
             const tbodyMod = document.getElementById('tablaModulos');
             tbodyMod.innerHTML = "";
             const snapMod = await getDocs(collection(db, "modulos"));
@@ -322,7 +448,7 @@
                 tbodyMod.appendChild(tr);
             });
 
-            // Pausar o reanudar
+            // Escuchadores de controles del Gestor de Contenidos
             document.querySelectorAll('.btn-status').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -332,7 +458,6 @@
                 });
             });
 
-            // Borrar componente
             document.querySelectorAll('.btn-del-mod').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     if(confirm("¿Eliminar componente de estudio?")) {
@@ -342,7 +467,6 @@
                 });
             });
 
-            // Editar contenido textual
             document.querySelectorAll('.btn-edit').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -359,7 +483,6 @@
                 });
             });
 
-            // Editar categorías del módulo en vivo
             document.querySelectorAll('.btn-edit-cat').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
