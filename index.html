@@ -23,9 +23,10 @@
             margin: 0;
             padding: 0;
             color: var(--gris-oscuro);
+            overflow-x: hidden;
         }
 
-        /* 📋 EFECTO DE DESVANECIMIENTO SOBRIO */
+        /* 📋 EFECTOS DE TRANSICIÓN GENERAL */
         .fade-in {
             animation: fadeInEase 0.5s ease-in-out forwards;
         }
@@ -33,6 +34,49 @@
         @keyframes fadeInEase {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 🔔 CARTEL DE BIENVENIDA FLOTANTE */
+        .welcome-banner {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: var(--blanco);
+            border-left: 5px solid var(--rojo-loginter);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 15px 25px;
+            border-radius: 6px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .welcome-banner.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .welcome-emoji {
+            font-size: 28px;
+            animation: waveEmoji 1.5s infinite;
+            transform-origin: 70% 70%;
+            display: inline-block;
+        }
+
+        @keyframes waveEmoji {
+            0% { transform: rotate( 0.0deg) }
+            10% { transform: rotate(14.0deg) }
+            20% { transform: rotate(-8.0deg) }
+            30% { transform: rotate(14.0deg) }
+            40% { transform: rotate(-4.0deg) }
+            50% { transform: rotate(10.0deg) }
+            60% { transform: rotate( 0.0deg) }
+            100% { transform: rotate( 0.0deg) }
         }
 
         header {
@@ -49,7 +93,6 @@
         .logo-txt { font-weight: 700; margin: 0; }
         .logo-txt span { color: var(--rojo-loginter); }
 
-        /* Estilos del contenedor de usuario en Header */
         .user-panel {
             display: flex;
             align-items: center;
@@ -182,6 +225,48 @@
         .btn-play { background: var(--gris-oscuro); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: 600; }
         .btn-play:hover { background: var(--rojo-loginter); }
 
+        /* 📋 DISEÑO NEUTRAL PARA LAS PREGUNTAS */
+        .opcion-label {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            background: var(--gris-fondo);
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .opcion-label:hover {
+            background: #E2E8F0;
+            border-color: #CBD5E1;
+        }
+        .opcion-label input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--rojo-loginter);
+            cursor: pointer;
+        }
+        .opcion-marker {
+            background: var(--gris-oscuro);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .opcion-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
         .progress-bar-container {
             background-color: #E2E8F0;
             border-radius: 10px;
@@ -223,11 +308,22 @@
 </head>
 <body>
 
+    <!-- 🔔 CARTEL DE BIENVENIDA ANIMADO (ESTADO INICIAL OCULTO) -->
+    <div id="welcomeBanner" class="welcome-banner">
+        <span class="welcome-emoji">👋</span>
+        <div>
+            <h4 id="welcomeName" style="margin: 0; font-size: 15px; font-weight: 700;">¡Hola!</h4>
+            <p style="margin: 2px 0 0 0; font-size: 12px; color: #475569;">Es un gusto tenerte de vuelta en la Academia.</p>
+        </div>
+    </div>
+
     <header>
         <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
+        <!-- PANEL DE USUARIO LOGUEADO -->
         <div id="userInfo" class="user-panel"></div>
     </header>
 
+    <!-- 🚪 PANTALLA 1: MICRO LANDING DE BIENVENIDA (LOGIN) -->
     <div id="loginSection" class="container landing-card fade-in">
         <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.2</span>
         
@@ -237,19 +333,22 @@
             Tu portal centralizado de entrenamiento operativo y desarrollo profesional continuo.
         </p>
 
+        <!-- CAJA DE LOGEO -->
         <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
             <label style="font-weight: 600; font-size: 14px; color: var(--gris-oscuro);">🪪 Ingresá tu número de DNI para comenzar:</label>
             <input type="number" id="dniInput" placeholder="Ej: 35123456 (sin puntos ni espacios)">
             <button class="btn-loginter" id="btnIngresar">Ingresar a la Academia 🚀</button>
         </div>
 
+        <!-- 💡 MENSAJE CÁLIDO SOBRE GESTIÓN DEL CONOCIMIENTO -->
         <div class="mensaje-calido">
-            ... 📌 <strong>La importancia de seguir aprendiendo:</strong><br>
+            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
             En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
-            ... 🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
+            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
         </div>
     </div>
 
+    <!-- 🗂️ PANTALLA 2: LISTA DE CURSOS FILTRADOS (MENÚ PRINCIPAL) -->
     <div id="menuSection" class="container fade-in" style="display: none;">
         <h3 style="margin-top: 0; color: var(--gris-oscuro); border-bottom: 2px solid var(--gris-fondo); padding-bottom: 10px;">
             <i class="fa-solid fa-clipboard-list"></i> Grilla General de Capacitaciones
@@ -257,8 +356,10 @@
         <div id="listaCursos"></div>
     </div>
 
+    <!-- 📖 PANTALLA 3: REPRODUCTOR DE CONTENIDOS -->
     <div id="appSection" class="container fade-in" style="display: none;">
         
+        <!-- BOTÓN PARA ABANDONAR CURSO -->
         <button id="btnAbandonarCurso" class="btn-abandonar">
             <i class="fa-solid fa-arrow-left"></i> ❌ Abandonar Curso
         </button>
@@ -269,7 +370,7 @@
         <div id="dinamicModules"></div>
         <div class="nav-buttons">
             <button class="btn-nav" id="btnAtras" disabled>⬅️ Anterior</button>
-            <button class="btn-nav next" id="btnSiguiente">Siguiente ➡️</button>
+            <button class="btn-nav next" id="btnSiguiente">Siguiente Módulo ➡️</button>
         </div>
     </div>
 
@@ -297,6 +398,9 @@
         let modulosDelCurso = [];
         let respuestasCorrectasTotales = 0;
         let preguntasEvaluadasCount = 0;
+        
+        // Guardará de forma temporal el valor de la opción correcta para cada paso de evaluación
+        let opcionCorrectaActualVal = ""; 
 
         // ACCIÓN INGRESO (LOG-IN)
         document.getElementById('btnIngresar').addEventListener('click', async () => {
@@ -306,8 +410,13 @@
             const userRef = doc(db, "participantes", usuarioDNI);
             const userSnap = await getDoc(userRef);
 
-            if (userSnap.exists() && userSnap.data().categoria) {
-                usuarioCategoria = userSnap.data().categoria;
+            let nombreCompleto = "";
+
+            if (userSnap.exists()) {
+                usuarioCategoria = userSnap.data().categoria || "Rep";
+                const nombre = userSnap.data().nombre || "";
+                const apellido = userSnap.data().apellido || "";
+                nombreCompleto = `${nombre} ${apellido}`.trim();
             } else {
                 usuarioCategoria = "Rep";
                 await setDoc(userRef, {
@@ -319,14 +428,23 @@
                 }, { merge: true });
             }
 
+            // Desplegar cartel flotante de bienvenida con el nombre y apellido si se detecta
+            const welcomeBanner = document.getElementById('welcomeBanner');
+            const welcomeName = document.getElementById('welcomeName');
+            welcomeName.textContent = nombreCompleto ? `¡Bienvenido/a, ${nombreCompleto}!` : `¡Bienvenido/a, Legajo ${usuarioDNI}!`;
+            
+            welcomeBanner.classList.add('show');
+            setTimeout(() => {
+                welcomeBanner.classList.remove('show');
+            }, 4000);
+
             // Renderizar datos del perfil en cabecera junto al botón de salir
             document.getElementById('userInfo').innerHTML = `
                 <span>👤 DNI: <strong>${usuarioDNI}</strong></span>
-                <span class="badge categoria-user">🏷️ Rango: ${usuarioCategoria}</span>
+                <span class="badge categoria-user">🏷️ Cargo: ${usuarioCategoria}</span>
                 <button id="btnLogOut" class="btn-logout"><i class="fa-solid fa-door-open"></i> Salir</button>
             `;
             
-            // Asignar el evento dinámico al botón de deslogueo recién creado
             document.getElementById('btnLogOut').addEventListener('click', () => {
                 cerrarSesionCompleta();
             });
@@ -344,7 +462,6 @@
             document.getElementById('dniInput').value = "";
             document.getElementById('userInfo').innerHTML = "";
             
-            // Ocultar paneles y mandar al login principal
             document.getElementById('menuSection').style.display = 'none';
             document.getElementById('appSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
@@ -356,7 +473,7 @@
             if (seguro) {
                 document.getElementById('appSection').style.display = 'none';
                 document.getElementById('menuSection').style.display = 'block';
-                cargarMenuCapacitaciones(); // Refrescar grilla
+                cargarMenuCapacitaciones();
             }
         });
 
@@ -471,14 +588,28 @@
             div.className = "step-content active";
 
             if (item.tipo === 'trivia') {
+                // 🎲 MEZCLAR ALEATORIAMENTE LAS OPCIONES PARA EVITAR PATRONES DE RESPUESTA
+                const esCorrectaPrimero = Math.random() < 0.5;
+                const opcA = esCorrectaPrimero ? item.opcionCorrecta : item.opcionIncorrecta;
+                const opcB = esCorrectaPrimero ? item.opcionIncorrecta : item.opcionCorrecta;
+                
+                // Guardar cuál es el identificador de valor de la correcta
+                opcionCorrectaActualVal = esCorrectaPrimero ? "A" : "B";
+
                 div.innerHTML = `
                     <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación del Módulo</h3>
-                    <p style="font-size:17px; font-weight:600;">🤔 ${item.pregunta}</p>
-                    <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
-                        <input type="radio" name="triviaOpc" value="1"> 🟢 ${item.opcionCorrecta}
+                    <p style="font-size:17px; font-weight:600; margin-bottom: 20px;">❓ ${item.pregunta}</p>
+                    
+                    <label class="opcion-label">
+                        <input type="radio" name="triviaOpc" value="A">
+                        <span class="opcion-marker">A</span>
+                        <span class="opcion-text">${opcA}</span>
                     </label>
-                    <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
-                        <input type="radio" name="triviaOpc" value="2"> 🔵 ${item.opcionIncorrecta}
+                    
+                    <label class="opcion-label">
+                        <input type="radio" name="triviaOpc" value="B">
+                        <span class="opcion-marker">B</span>
+                        <span class="opcion-text">${opcB}</span>
                     </label>
                 `;
             } else {
@@ -504,7 +635,11 @@
             if (item.tipo === 'trivia') {
                 const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
                 if (!seleccionada) return alert("⚠️ Por favor, selecciona una opción antes de continuar.");
-                if (seleccionada.value === "1") respuestasCorrectasTotales++;
+                
+                // Validar la opción elegida contra la aleatorización registrada
+                if (seleccionada.value === opcionCorrectaActualVal) {
+                    respuestasCorrectasTotales++;
+                }
             }
 
             if (pasoActual === totalPasos - 1) {
@@ -529,7 +664,6 @@
 
                 alert(`💾 Resultado registrado con éxito: ${glosaResultado}`);
                 
-                // CAMBIO CLAVE: Volver suavemente al menú principal sin reiniciar la app entera
                 document.getElementById('appSection').style.display = 'none';
                 document.getElementById('menuSection').style.display = 'block';
                 await cargarMenuCapacitaciones(); 
