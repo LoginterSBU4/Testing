@@ -25,6 +25,16 @@
             color: var(--gris-oscuro);
         }
 
+        /* 📋 EFECTO DE DESVANECIMIENTO SOBRIO */
+        .fade-in {
+            animation: fadeInEase 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeInEase {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         header {
             background-color: var(--blanco);
             color: var(--gris-oscuro);
@@ -48,7 +58,36 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
-        .card-login { text-align: center; max-width: 400px; margin: 100px auto; }
+        /* 🚪 ESTILOS MICRO LANDING */
+        .landing-card {
+            text-align: center;
+            max-width: 550px;
+            margin: 60px auto;
+        }
+
+        .alpha-badge {
+            background-color: #FFF3CD;
+            color: #856404;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid #FFEBAA;
+        }
+
+        .mensaje-calido {
+            background-color: #F8FAFC;
+            border-left: 4px solid var(--rojo-loginter);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+        }
 
         .btn-loginter {
             background-color: var(--rojo-loginter);
@@ -72,6 +111,7 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
+            text-align: center;
         }
 
         .item-curso {
@@ -98,7 +138,6 @@
         
         .btn-play { background: var(--gris-oscuro); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: 600; }
         .btn-play:hover { background: var(--rojo-loginter); }
-        .btn-play:disabled { background: #94A3B8; cursor: not-allowed; }
 
         .progress-bar-container {
             background-color: #E2E8F0;
@@ -142,31 +181,47 @@
 <body>
 
     <header>
-        <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4</span></h2>
+        <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
         <div id="userInfo"></div>
     </header>
 
-    <div id="loginSection" class="container card-login">
-        <i class="fa-solid fa-id-card" style="font-size: 50px; color: var(--rojo-loginter); margin-bottom: 10px;"></i>
-        <h3>Plataforma de Capacitación</h3>
-        <p style="color: var(--gris-texto)">Ingresa tu DNI para comenzar tu instrucción.</p>
-        <input type="number" id="dniInput" placeholder="Número de DNI sin puntos">
-        <button class="btn-loginter" id="btnIngresar">Ingresar</button>
+    <div id="loginSection" class="container landing-card fade-in">
+        <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.2</span>
+        
+        <i class="fa-solid fa-graduation-cap" style="font-size: 60px; color: var(--rojo-loginter); margin-bottom: 15px; display:block;"></i>
+        <h2>¡Te damos la bienvenida! 👋</h2>
+        <p style="color: var(--gris-texto); font-size: 15px; margin-bottom: 25px;">
+            Tu portal centralizado de entrenamiento operativo y desarrollo profesional continuo.
+        </p>
+
+        <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+            <label style="font-weight: 600; font-size: 14px; color: var(--gris-oscuro);">🪪 Ingresá tu número de DNI para comenzar:</label>
+            <input type="number" id="dniInput" placeholder="Ej: 35123456 (sin puntos ni espacios)">
+            <button class="btn-loginter" id="btnIngresar">Ingresar a la Academia 🚀</button>
+        </div>
+
+        <div class="mensaje-calido">
+            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
+            En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
+            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
+        </div>
     </div>
 
-    <div id="menuSection" class="container" style="display: none;">
-        <h3 style="margin-top: 0; color: var(--gris-oscuro); border-bottom: 2px solid var(--gris-fondo); padding-bottom: 10px;"><i class="fa-solid fa-graduation-cap"></i> Grilla de Capacitaciones</h3>
+    <div id="menuSection" class="container fade-in" style="display: none;">
+        <h3 style="margin-top: 0; color: var(--gris-oscuro); border-bottom: 2px solid var(--gris-fondo); padding-bottom: 10px;">
+            <i class="fa-solid fa-clipboard-list"></i> Grilla General de Capacitaciones
+        </h3>
         <div id="listaCursos"></div>
     </div>
 
-    <div id="appSection" class="container" style="display: none;">
+    <div id="appSection" class="container fade-in" style="display: none;">
         <div class="progress-bar-container">
             <div id="progressBar" class="progress-bar"></div>
         </div>
         <div id="dinamicModules"></div>
         <div class="nav-buttons">
-            <button class="btn-nav" id="btnAtras" disabled>Anterior</button>
-            <button class="btn-nav next" id="btnSiguiente">Siguiente</button>
+            <button class="btn-nav" id="btnAtras" disabled>⬅️ Anterior</button>
+            <button class="btn-nav next" id="btnSiguiente">Siguiente ➡️</button>
         </div>
     </div>
 
@@ -197,7 +252,7 @@
 
         document.getElementById('btnIngresar').addEventListener('click', async () => {
             usuarioDNI = document.getElementById('dniInput').value.trim();
-            if(!usuarioDNI) return alert("DNI requerido");
+            if(!usuarioDNI) return alert("⚠️ Por favor, ingresa tu DNI para continuar.");
 
             const userRef = doc(db, "participantes", usuarioDNI);
             const userSnap = await getDoc(userRef);
@@ -216,9 +271,11 @@
             }
 
             document.getElementById('userInfo').innerHTML = `
-                <span><i class="fa-solid fa-user"></i> DNI: <strong>${usuarioDNI}</strong></span>
-                <span class="badge categoria-user"><i class="fa-solid fa-tags"></i> ${usuarioCategoria}</span>
+                <span>👤 DNI: <strong>${usuarioDNI}</strong></span>
+                <span class="badge categoria-user">🏷️ Perfil: ${usuarioCategoria}</span>
             `;
+            
+            // Ocultar e intercambiar pantallas con animaciones limpias
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('menuSection').style.display = 'block';
 
@@ -227,7 +284,7 @@
 
         async function cargarMenuCapacitaciones() {
             const container = document.getElementById('listaCursos');
-            container.innerHTML = "Cargando grilla unificada...";
+            container.innerHTML = "⏳ Organizando tu grilla corporativa personalizada...";
 
             const historialRef = doc(db, "participantes", usuarioDNI);
             const historialSnap = await getDoc(historialRef);
@@ -252,14 +309,13 @@
 
             container.innerHTML = "";
             if(listaModulosLectura.length === 0) {
-                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">No hay capacitaciones cargadas en el sistema.</p>`;
+                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ No hay capacitaciones dadas de alta en este momento.</p>`;
                 return;
             }
 
             listaModulosLectura.forEach(curso => {
                 const div = document.createElement('div');
                 
-                // Normalizar categorías para soportar tanto texto plano (viejo) como arreglos (nuevo)
                 let categoriasDestino = [];
                 if (Array.isArray(curso.categoriaAsignada)) {
                     categoriasDestino = curso.categoriaAsignada;
@@ -267,28 +323,27 @@
                     categoriasDestino = [curso.categoriaAsignada];
                 }
 
-                // Verificar si el perfil del usuario tiene acceso
                 const tieneAcceso = categoriasDestino.includes(usuarioCategoria);
 
                 if (!tieneAcceso) {
-                    // SE MUESTRA PERO DESHABILITADO
+                    // 🔒 CURSO NO PERTENECIENTE AL PERFIL
                     div.className = "item-curso bloqueado";
                     div.innerHTML = `
-                        <div><strong>${curso.titulo}</strong></div>
+                        <div>📄 <strong>${curso.titulo}</strong></div>
                         <span class="badge bloqueado-txt"><i class="fa-solid fa-lock"></i> No disponible para su perfil</span>
                     `;
                 } else if (cursosHechos[curso.titulo]) {
-                    // YA COMPLETADO
+                    // ✅ CURSO YA APROBADO O REALIZADO
                     div.className = "item-curso";
                     div.innerHTML = `
-                        <div><strong>${curso.titulo}</strong></div>
-                        <span class="badge hecho"><i class="fa-solid fa-circle-check"></i> ${cursosHechos[curso.titulo]}</span>
+                        <div>📄 <strong>${curso.titulo}</strong></div>
+                        <span class="badge hecho">🎉 Realizado: ${cursosHechos[curso.titulo]}</span>
                     `;
                 } else {
-                    // DISPONIBLE PARA HACER
+                    // 🚀 DISPONIBLE PARA CURSAR EN EL MOMENTO
                     div.className = "item-curso";
                     div.innerHTML = `
-                        <div><strong>${curso.titulo}</strong></div>
+                        <div>📄 <strong>${curso.titulo}</strong></div>
                         <button class="btn-play" data-titulo="${curso.titulo}"><i class="fa-solid fa-play"></i> Iniciar Test</button>
                     `;
                 }
@@ -343,17 +398,17 @@
             if (item.tipo === 'trivia') {
                 div.innerHTML = `
                     <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación del Módulo</h3>
-                    <p style="font-size:17px; font-weight:600;">${item.pregunta}</p>
+                    <p style="font-size:17px; font-weight:600;">🤔 ${item.pregunta}</p>
                     <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
-                        <input type="radio" name="triviaOpc" value="1"> ${item.opcionCorrecta}
+                        <input type="radio" name="triviaOpc" value="1"> 🟢 ${item.opcionCorrecta}
                     </label>
                     <label style="display:block; margin:12px 0; background:var(--gris-fondo); padding:15px; border-radius:6px; cursor:pointer;">
-                        <input type="radio" name="triviaOpc" value="2"> ${item.opcionIncorrecta}
+                        <input type="radio" name="triviaOpc" value="2"> 🔵 ${item.opcionIncorrecta}
                     </label>
                 `;
             } else {
                 div.innerHTML = `
-                    <h3 style="color: var(--rojo-loginter); margin-top:0;">${item.titulo}</h3>
+                    <h3 style="color: var(--rojo-loginter); margin-top:0;">📖 ${item.titulo}</h3>
                     <p style="white-space: pre-wrap; color: #4A5568; font-size:16px;">${item.contenido}</p>
                 `;
             }
@@ -362,7 +417,7 @@
             document.getElementById('btnAtras').disabled = pasoActual === 0;
             const porcentaje = totalPasos > 1 ? (pasoActual / (totalPasos - 1)) * 100 : 100;
             document.getElementById('progressBar').style.width = `${porcentaje}%`;
-            document.getElementById('btnSiguiente').textContent = (pasoActual === totalPasos - 1) ? "Finalizar Evaluación" : "Siguiente";
+            document.getElementById('btnSiguiente').textContent = (pasoActual === totalPasos - 1) ? "🏁 Finalizar Evaluación" : "Siguiente Módulo ➡️";
         }
 
         document.getElementById('btnAtras').addEventListener('click', () => {
@@ -373,12 +428,12 @@
             const item = modulosDelCurso[pasoActual];
             if (item.tipo === 'trivia') {
                 const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
-                if (!seleccionada) return alert("Responde para continuar.");
+                if (!seleccionada) return alert("⚠️ Por favor, selecciona una opción antes de continuar.");
                 if (seleccionada.value === "1") respuestasCorrectasTotales++;
             }
 
             if (pasoActual === totalPasos - 1) {
-                let aprueba = respuestasCorrectasTotales >= (preguntasEvaluadasCount / 2) ? "Aprobado" : "Desaprobado";
+                let aprueba = respuestasCorrectasTotales >= (preguntasEvaluadasCount / 2) ? "Aprobado ✅" : "Desaprobado ❌";
                 let glosaResultado = `${aprueba} (${respuestasCorrectasTotales}/${preguntasEvaluadasCount})`;
 
                 const userRef = doc(db, "participantes", usuarioDNI);
@@ -397,7 +452,7 @@
                     historialCursos: historialExistente
                 }, { merge: true });
 
-                alert(`Capacitación Guardada: ${glosaResultado}`);
+                alert(`💾 Resultado registrado con éxito: ${glosaResultado}`);
                 location.reload();
                 return;
             }
