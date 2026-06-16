@@ -15,82 +15,25 @@
             --blanco: #FFFFFF;
         }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--gris-fondo);
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: var(--gris-oscuro);
-            color: white;
-            padding: 15px 30px;
-            border-bottom: 4px solid var(--rojo-loginter);
-        }
-
-        .admin-container {
-            max-width: 1300px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1.7fr;
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            margin-bottom: 25px;
-        }
-
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
+        header { background-color: var(--gris-oscuro); color: white; padding: 15px 30px; border-bottom: 4px solid var(--rojo-loginter); }
+        .admin-container { max-width: 1350px; margin: 30px auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 30px; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; }
         h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0 14px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        .seccion-pregunta {
-            background: #F8FAFC;
-            padding: 15px;
-            border-left: 4px solid var(--rojo-loginter);
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #E2E8F0; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 6px 0 14px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        .seccion-pregunta { background: #F8FAFC; padding: 15px; border-left: 4px solid var(--rojo-loginter); border-radius: 4px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
         th { background-color: var(--gris-oscuro); color: white; }
-
         .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
         .btn-submit:hover { background-color: #EF233C; }
-        
-        .select-acciones {
-            padding: 6px 10px;
-            background-color: #F1F5F9;
-            border: 1px solid #CBD5E1;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--gris-oscuro);
-            cursor: pointer;
-            width: auto;
-        }
-
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0;}
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge.success { background: #D4EDDA; color: #155724; }
         .badge.warning { background: #FFF3CD; color: #856404; }
+        .badge.danger { background: #F8D7DA; color: #721C24; }
+        .btn-control { padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; margin-right: 2px; }
     </style>
 </head>
 <body>
@@ -105,67 +48,77 @@
             <div class="card">
                 <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación y Cuestionario</h3>
                 <form id="formMultiPregunta">
+                    <input type="hidden" id="edit_id">
                     <label><strong>Título de la Capacitación</strong></label>
                     <input type="text" id="tituloModulo" placeholder="Ej: Seguridad en autoelevadores" required>
                     
-                    <label><strong>Orden del Módulo (Posición numérica)</strong></label>
+                    <label><strong>Orden del Módulo (Posición numérica entera)</strong></label>
                     <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
 
                     <label><strong>Texto Instructivo Guía (Contenido)</strong></label>
-                    <textarea id="contenidoModulo" rows="5" placeholder="Pega el manual o instructivo aquí..." required></textarea>
+                    <textarea id="contenidoModulo" rows="5" placeholder="Pega el manual o instructivo..." required></textarea>
 
-                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación (Mínimo 2 Preguntas)</h4>
+                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación</h4>
 
                     <div class="seccion-pregunta">
                         <strong>Pregunta 1 (Obligatoria)</strong>
-                        <input type="text" id="p1_preg" placeholder="¿Qué significa la señalización amarilla?" required>
+                        <input type="text" id="p1_preg" placeholder="Pregunta 1" required>
                         <input type="text" id="p1_corr" placeholder="Opción Correcta" required>
                         <input type="text" id="p1_inc" placeholder="Opción Incorrecta" required>
                     </div>
 
                     <div class="seccion-pregunta">
                         <strong>Pregunta 2 (Obligatoria)</strong>
-                        <input type="text" id="p2_preg" placeholder="¿Cuál es el límite de velocidad permitido?" required>
+                        <input type="text" id="p2_preg" placeholder="Pregunta 2" required>
                         <input type="text" id="p2_corr" placeholder="Opción Correcta" required>
                         <input type="text" id="p2_inc" placeholder="Opción Incorrecta" required>
                     </div>
 
-                    <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                        <strong>Pregunta 3 (Opcional)</strong>
-                        <input type="text" id="p3_preg" placeholder="Pregunta adicional de refuerzo">
-                        <input type="text" id="p3_corr" placeholder="Opción Correcta">
-                        <input type="text" id="p3_inc" placeholder="Opción Incorrecta">
-                    </div>
-
-                    <button type="submit" class="btn-submit">Publicar Capacitación Completa</button>
+                    <button type="submit" class="btn-submit" id="btnGuardar">Publicar Capacitación Completa</button>
                 </form>
             </div>
 
             <div class="card">
                 <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
-                <div style="overflow-x:auto;">
+                <div style="overflow-x:auto; max-height: 250px;">
                     <table>
                         <thead>
                             <tr>
                                 <th>DNI</th>
                                 <th>Estado</th>
-                                <th>Resultado Examen</th>
-                                <th>Acciones de Control</th>
+                                <th>Último Examen</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaParticipantes"></tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
+        <div class="card" style="margin-top: 20px;">
+            <h3><i class="fa-solid fa-layer-group"></i> Panel Gestor de Contenidos y Módulos de Evaluación</h3>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Orden</th>
+                            <th>Tipo</th>
+                            <th>Identificador / Pregunta</th>
+                            <th>Estado Actual</th>
+                            <th>Controles de Ajuste</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaModulos"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-   <script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CONFIGURACIÓN OFICIAL DE FIRESTORE CON TU API KEY SUMINISTRADA
         const firebaseConfig = {
             apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",
             authDomain: "bot-de-capacitacion-sbu4.firebaseapp.com",
@@ -178,7 +131,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // EVENTO: PUBLICAR NUEVA CAPACITACIÓN Y CUESTIONARIO
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -186,154 +138,143 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
-                // 1. Guardar el material de lectura guía
-                await addDoc(collection(db, "modulos"), { titulo, orden, contenido, tipo: 'lectura' });
-                
-                // 2. Guardar Pregunta 1 Obligatoria
+                // Publicación estructurada limpia
+                await addDoc(collection(db, "modulos"), { titulo, orden, contenido, tipo: 'lectura', estado: 'activo' });
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
                     pregunta: document.getElementById('p1_preg').value,
                     opcionCorrecta: document.getElementById('p1_corr').value,
                     opcionIncorrecta: document.getElementById('p1_inc').value,
-                    tipo: 'trivia'
+                    tipo: 'trivia', estado: 'activo'
                 });
-
-                // 3. Guardar Pregunta 2 Obligatoria
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
                     pregunta: document.getElementById('p2_preg').value,
                     opcionCorrecta: document.getElementById('p2_corr').value,
                     opcionIncorrecta: document.getElementById('p2_inc').value,
-                    tipo: 'trivia'
+                    tipo: 'trivia', estado: 'activo'
                 });
 
-                // 4. Guardar Pregunta 3 Opcional (si se rellenaron los campos)
-                const p3_preg = document.getElementById('p3_preg').value.trim();
-                const p3_corr = document.getElementById('p3_corr').value.trim();
-                const p3_inc = document.getElementById('p3_inc').value.trim();
-
-                if (p3_preg && p3_corr && p3_inc) {
-                    await addDoc(collection(db, "modulos"), {
-                        orden: orden + 0.6,
-                        pregunta: p3_preg,
-                        opcionCorrecta: p3_corr,
-                        opcionIncorrecta: p3_inc,
-                        tipo: 'trivia'
-                    });
-                }
-
-                alert("¡Capacitación Loginter SBU4 registrada correctamente!");
-                document.getElementById('formMultiPregunta').reset();
+                alert("¡Publicado exitosamente!");
                 location.reload();
-            } catch (err) { 
-                console.error("Error en Firebase:", err); 
-                alert("Ocurrió un error de conexión al intentar guardar. Revisa la consola.");
-            }
+            } catch (err) { console.error(err); }
         });
 
-        // FUNCIÓN: CARGAR CAPACITADOS DE LA COLECCIÓN 'PARTICIPANTES'
-        async function cargarRegistrosAdministracion() {
-            const tbody = document.getElementById('tablaParticipantes');
-            tbody.innerHTML = "";
-            
-            try {
-                const querySnapshot = await getDocs(collection(db, "participantes"));
-                
-                // Validación visual si la base de datos no tiene operarios cargados aún
-                if (querySnapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748B; padding:20px;">Esperando que los capacitados registren su DNI desde la app de pruebas...</td></tr>`;
-                    return;
-                }
-                            
-                querySnapshot.forEach((docSnap) => {
-                    const p = docSnap.data();
-                    const id = docSnap.id;
-                    const tr = document.createElement('tr');
-                    
-                    const badgeEst = p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`;
-                    
-                    let fechaFormateada = "No registrada";
-                    if (p.fechaInicio) {
-                        fechaFormateada = p.fechaInicio.seconds ? new Date(p.fechaInicio.seconds * 1000).toLocaleString() : new Date(p.fechaInicio).toLocaleString();
-                    }
+        async function cargarDatosAdmin() {
+            // 1. CARGAR TABLA PARTICIPANTES
+            const tbodyPart = document.getElementById('tablaParticipantes');
+            tbodyPart.innerHTML = "";
+            const snapPart = await getDocs(collection(db, "participantes"));
+            snapPart.forEach(docSnap => {
+                const p = docSnap.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${p.dni}</strong></td>
+                    <td>${p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`}</td>
+                    <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
+                    <td>
+                        <select class="select-acciones" data-id="${docSnap.id}" data-dni="${p.dni}" data-resultado="${p.pruebaAprobada || 'Pendiente'}">
+                            <option value="" disabled selected>Acciones...</option>
+                            <option value="ver">👁️ Ver Historial</option>
+                            <option value="resetear">🔄 Resetear Todo</option>
+                            <option value="borrar">🗑️ Eliminar</option>
+                        </select>
+                    </td>
+                `;
+                tbodyPart.appendChild(tr);
+            });
 
-                    tr.innerHTML = `
-                        <td><strong>${p.dni || 'S/D'}</strong></td>
-                        <td>${badgeEst}</td>
-                        <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
-                        <td>
-                            <select class="select-acciones" data-id="${id}" data-dni="${p.dni || 'S/D'}" data-resultado="${p.pruebaAprobada || 'Pendiente'}" data-fecha="${fechaFormateada}">
-                                <option value="" disabled selected>Acciones...</option>
-                                <option value="ver">👁️ Ver respuestas</option>
-                                <option value="resetear">🔄 Resetear progreso</option>
-                                <option value="borrar">🗑️ Borrar registro</option>
-                            </select>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-                asignarEventosAcciones();
-            } catch (error) {
-                console.error("Error al traer colección 'participantes':", error);
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--rojo-loginter); padding:20px;">Error al conectar. Verifica las reglas de lectura de tu base de datos Firestore.</td></tr>`;
-            }
-        }
-
-        // FUNCIÓN: MANIPULACIÓN DE REGISTROS DE CAPACITADOS
-        function asignarEventosAcciones() {
-            document.querySelectorAll('.select-acciones').forEach(select => {
-                select.addEventListener('change', async (e) => {
-                    const accion = e.target.value;
-                    const id = e.target.getAttribute('data-id');
-                    const dni = e.target.getAttribute('data-dni');
-                    const resultado = e.target.getAttribute('data-resultado');
-                    const fecha = e.target.getAttribute('data-fecha');
-
-                    if (accion === 'ver') {
-                        const ventanaRespuestas = window.open("", "_blank", "width=600,height=400");
-                        ventanaRespuestas.document.write(`
-                            <html>
-                            <head>
-                                <title>Reporte Loginter - Legajo ${dni}</title>
-                                <style>
-                                    body { font-family: 'Arial', sans-serif; padding: 30px; color: #2B2D42; background: #EDF2F4; }
-                                    .report-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #D90429; }
-                                    h2 { margin-top: 0; color: #2B2D42; font-size: 20px; text-transform: uppercase; }
-                                    p { font-size: 15px; margin: 12px 0; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px; }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="report-card">
-                                    <h2>LOGINTER SBU4 - Detalle de Cuestionario</h2>
-                                    <p><strong>Identificación (DNI):</strong> ${dni}</p>
-                                    <p><strong>Fecha de Validación:</strong> ${fecha}</p>
-                                    <p><strong>Dictamen de Evaluación:</strong> ${resultado}</p>
-                                </div>
-                            </body>
-                            </html>
-                        `);
-                        ventanaRespuestas.document.close();
-                    } else if (accion === 'resetear') {
-                        if (confirm(`¿Desea resetear a estado inicial el progreso del DNI: ${dni}?`)) {
-                            await updateDoc(doc(db, "participantes", id), { pasoGuardado: 0, completado: false, pruebaAprobada: "Pendiente" });
-                            alert("Progreso reestablecido."); 
-                            cargarRegistrosAdministracion();
-                        }
-                    } else if (accion === 'borrar') {
-                        if (confirm(`¿Eliminar definitivamente el registro del DNI: ${dni}?`)) {
-                            await deleteDoc(doc(db, "participantes", id));
-                            alert("Registro eliminado de la base de datos."); 
-                            cargarRegistrosAdministracion();
-                        }
+            // Eventos de la tabla de participantes
+            document.querySelectorAll('.select-acciones').forEach(sel => {
+                sel.addEventListener('change', async (e) => {
+                    const acc = e.target.value; const id = e.target.getAttribute('data-id'); const dni = e.target.getAttribute('data-dni');
+                    if (acc === 'ver') {
+                        const snap = await getDocs(collection(db, "participantes"));
+                        let textoHistorial = "";
+                        snap.forEach(d => {
+                            if(d.data().dni === dni && d.data().historialCursos) {
+                                Object.keys(d.data().historialCursos).forEach(k => {
+                                    textoHistorial += `<p>• <strong>${k}:</strong> ${d.data().historialCursos[k]}</p>`;
+                                });
+                            }
+                        });
+                        const w = window.open("", "_blank", "width=500,height=400");
+                        w.document.write(`<html><body><h3>Cursos de Legajo: ${dni}</h3>${textoHistorial || '<p>Sin registros avanzados.</p>'}</body></html>`);
+                        w.document.close();
+                    } else if (acc === 'resetear') {
+                        if(confirm("¿Resetear?")) { await updateDoc(doc(db, "participantes", id), { historialCursos: {}, pruebaAprobada: "Pendiente", completado: false }); location.reload(); }
+                    } else if (acc === 'borrar') {
+                        if(confirm("¿Eliminar?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
                     }
                     e.target.value = "";
                 });
             });
-        }
 
-        // Ejecución inicial automática de la tabla
-        cargarRegistrosAdministracion();
+            // 2. GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
+            const tbodyMod = document.getElementById('tablaModulos');
+            tbodyMod.innerHTML = "";
+            const snapMod = await getDocs(collection(db, "modulos"));
+            let modulosTodos = [];
+            snapMod.forEach(d => modulosTodos.push({id: d.id, ...d.data()}));
+            modulosTodos.sort((a,b) => a.orden - b.orden);
+
+            modulosTodos.forEach(m => {
+                const tr = document.createElement('tr');
+                const estadoBadge = m.estado === 'desactivado' ? `<span class="badge danger">Pausado</span>` : `<span class="badge success">Activo</span>`;
+                const labelInfo = m.tipo === 'lectura' ? `<strong>CURSO: ${m.titulo}</strong>` : `Pregunta: ${m.pregunta}`;
+                
+                tr.innerHTML = `
+                    <td>${m.orden}</td>
+                    <td><span class="badge ${m.tipo === 'lectura' ? 'success' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
+                    <td>${labelInfo}</td>
+                    <td>${estadoBadge}</td>
+                    <td>
+                        <button class="btn-control btn-status" data-id="${m.id}" data-status="${m.estado || 'activo'}">👁️ Ver/Pausar</button>
+                        <button class="btn-control btn-edit" data-id="${m.id}" data-tipo="${m.tipo}">✏️ Editar</button>
+                        <button class="btn-control btn-del-mod" data-id="${m.id}" style="color:red;">🗑️ Borrar</button>
+                    </td>
+                `;
+                tbodyMod.appendChild(tr);
+            });
+
+            // Manejadores del Gestor de Contenidos
+            document.querySelectorAll('.btn-status').forEach(b => {
+                b.addEventListener('click', async (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const current = e.target.getAttribute('data-status');
+                    const nextStatus = current === 'desactivado' ? 'activo' : 'desactivated'; 
+                    // Normalización del flag
+                    await updateDoc(doc(db, "modulos", id), { estado: (current === 'desactivado' ? 'activo' : 'desactivado') });
+                    location.reload();
+                });
+            });
+
+            document.querySelectorAll('.btn-del-mod').forEach(b => {
+                b.addEventListener('click', async (e) => {
+                    if(confirm("¿Eliminar este componente del examen/lectura?")) {
+                        await deleteDoc(doc(db, "modulos", e.target.getAttribute('data-id')));
+                        location.reload();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.btn-edit').forEach(b => {
+                b.addEventListener('click', async (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    const tipo = e.target.getAttribute('data-tipo');
+                    const nuevoTexto = prompt("Introduce el nuevo texto de actualización para este registro:");
+                    if(nuevoTexto) {
+                        if(tipo === 'lectura') {
+                            await updateDoc(doc(db, "modulos", id), { contenido: nuevoTexto });
+                        } else {
+                            await updateDoc(doc(db, "modulos", id), { pregunta: nuevoTexto });
+                        }
+                        alert("Modificado."); location.reload();
+                    }
+                });
+            });
+        }
+        cargarDatosAdmin();
     </script>
 </body>
 </html>
