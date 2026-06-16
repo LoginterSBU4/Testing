@@ -33,7 +33,6 @@
         .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
         .btn-submit:hover { background-color: #EF233C; }
         
-        /* ✨ Estilos especiales para el botón de IA */
         .btn-ia { background: var(--azul-ia); color: white; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 15px; font-size: 13px; width: 100%; transition: 0.2s; }
         .btn-ia:hover { background-color: #3046C5; }
         .btn-ia:disabled { background-color: #94A3B8; cursor: not-allowed; }
@@ -185,7 +184,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 🧠 CONEXIÓN E INTEGRACIÓN CON LA IA DE GOOGLE GEMINI ---
+        // --- 🧠 CONEXIÓN REFORZADA CON LA IA DE GOOGLE GEMINI ---
         document.getElementById('btnProcesarIA').addEventListener('click', async () => {
             const apiKey = document.getElementById('geminiApiKey').value.trim();
             const contenidoCrudo = document.getElementById('contenidoModulo').value.trim();
@@ -196,34 +195,32 @@
 
             const btn = document.getElementById('btnProcesarIA');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y analizando con IA...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y limpiando texto con IA...`;
 
-            // Prompt maestro con estructura estricta en formato JSON para mapearlo de inmediato al formulario
             const promptMaestro = `
             Actúa como un instructor pedagógico experto en operaciones logísticas. 
-            Quiero que analices el siguiente texto técnico perteneciente a la capacitación llamada "${titulo}".
+            Analiza el texto técnico de la capacitación llamada "${titulo}".
             
-            Tu tarea consiste en hacer 2 cosas:
-            1. Reestructurar el texto para que NO sea una lectura literal o aburrida. Hazlo dinámico, amable, enfocado en el operario, usando viñetas claras, advertencias importantes y emoticones amigables.
-            2. Crear exactamente 2 preguntas de opción múltiple interactiva basadas en situaciones del día a día (casos prácticos de depósito o distribución), no teóricas de memoria. Cada pregunta debe tener una opción correcta clara y una opción incorrecta verosímil.
+            Debes realizar obligatoriamente:
+            1. Reestructurar el texto para que sea dinámico, muy amigable, enfocado en operarios, usando viñetas claras, advertencias importantes y emojis amigables.
+            2. Crear exactamente 2 preguntas de opción múltiple interactiva basadas en situaciones reales o casos prácticos de depósito, no teóricas. Cada una tendrá una opción correcta y una incorrecta verosímil.
 
-            Devuelve el resultado estrictamente en el siguiente formato estructurado JSON sin comentarios y sin bloques de código markdown:
+            Devuelve el resultado estrictamente en este formato JSON plano, sin agregar palabras extras antes o después, ni usar bloques de código markdown (\`\`\`json):
             {
-              "contenidoDidactico": "AQUÍ_EL_TEXTO_REESCRITO_CON_EMOJIS_Y_VIÑETAS",
+              "contenidoDidactico": "TEXTO_REESCRITO_CON_EMOJIS_Y_LINEAS",
               "p1_pregunta": "Texto de la situación interactiva 1",
               "p1_correcta": "Respuesta correcta a la situación 1",
-              "p1_incorrecta": "Respuesta incorrecta plausible para la situación 1",
+              "p1_incorrecta": "Respuesta incorrecta para la situación 1",
               "p2_pregunta": "Texto de la situación interactiva 2",
               "p2_correcta": "Respuesta correcta a la situación 2",
-              "p2_incorrecta": "Respuesta incorrecta plausible para la situación 2"
+              "p2_incorrecta": "Respuesta incorrecta para la situación 2"
             }
 
-            Texto técnico a procesar:
+            Texto a procesar:
             ${contenidoCrudo}
             `;
 
             try {
-                // Endpoint directo de Gemini 1.5 Flash (ideal para texto y respuestas rápidas)
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
                 
                 const response = await fetch(url, {
@@ -235,14 +232,24 @@
                 });
 
                 const data = await response.json();
-                let respuestaTexto = data.candidates[0].content.parts[0].text;
                 
-                // Limpiar posibles bloques de formato markdown que devuelva la IA de forma rebelde
-                respuestaTexto = respuestaTexto.replace(/```json/g, "").replace(/```/g, "").trim();
+                if (!data.candidates || data.candidates.length === 0) {
+                    throw new Error("La API Key no devolvió datos válidos o alcanzó el límite.");
+                }
+
+                let respuestaTexto = data.candidates[0].content.parts[0].text.trim();
+                
+                // 🛠️ FILTRO ANTIRROTURA INTEGRADO: Extrae solo lo que está entre llaves { } si la IA agrega basura
+                const inicioJSON = respuestaTexto.indexOf('{');
+                const finJSON = respuestaTexto.lastIndexOf('}');
+                
+                if (inicioJSON !== -1 && finJSON !== -1) {
+                    respuestaTexto = respuestaTexto.substring(inicioJSON, finJSON + 1);
+                }
 
                 const objetoResultado = JSON.parse(respuestaTexto);
 
-                // Auto-rellenar el formulario con el procesamiento de la IA
+                // Auto-rellenar
                 document.getElementById('contenidoModulo').value = objetoResultado.contenidoDidactico;
                 document.getElementById('p1_preg').value = objetoResultado.p1_pregunta;
                 document.getElementById('p1_corr').value = objetoResultado.p1_correcta;
@@ -254,14 +261,13 @@
                 alert("✨ ¡Contenido transformado y evaluaciones creadas con éxito! Revisa los campos antes de publicar.");
 
             } catch (error) {
-                console.error(error);
-                alert("❌ Error al procesar con IA. Asegúrate de que la API Key sea correcta y que la respuesta devuelta sea un JSON válido.");
+                console.error("Detalle del error:", error);
+                alert("❌ Error al procesar con IA.\n\nVerifica:\n1. Que tu API Key sea válida.\n2. Que el manual copiado no sea demasiado corto.");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ✨ Optimizar Contenido y Crear Trivia con IA`;
             }
         });
-
 
         // --- FUNCIONALIDADES BASE DE FIREBASE ---
         function getSelectedCategories(selectElement) {
