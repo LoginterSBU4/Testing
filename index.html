@@ -27,11 +27,11 @@
 
         /* 📋 EFECTO DE DESVANECIMIENTO SOBRIO */
         .fade-in {
-            animation: fadeInEase 0.8s ease-in-out forwards;
+            animation: fadeInEase 0.5s ease-in-out forwards;
         }
 
         @keyframes fadeInEase {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -48,6 +48,28 @@
 
         .logo-txt { font-weight: 700; margin: 0; }
         .logo-txt span { color: var(--rojo-loginter); }
+
+        /* Estilos del contenedor de usuario en Header */
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-logout {
+            background-color: #E2E8F0;
+            color: #475569;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-logout:hover {
+            background-color: var(--rojo-loginter);
+            color: white;
+        }
 
         .container {
             max-width: 750px;
@@ -103,6 +125,27 @@
         }
         .btn-loginter:hover { background-color: var(--rojo-hover); }
 
+        .btn-abandonar {
+            background-color: transparent;
+            color: #64748B;
+            border: 1px solid #CBD5E1;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-abandonar:hover {
+            background-color: #F1F5F9;
+            color: var(--rojo-loginter);
+            border-color: var(--rojo-loginter);
+        }
+
         input[type="number"] {
             width: 100%;
             padding: 12px;
@@ -134,7 +177,7 @@
         .badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
         .badge.hecho { background: #D4EDDA; color: #155724; }
         .badge.bloqueado-txt { background: #E2E8F0; color: #64748B; font-size: 12px; }
-        .badge.categoria-user { background: #E2E8F0; color: var(--gris-oscuro); margin-left: 10px; }
+        .badge.categoria-user { background: #E2E8F0; color: var(--gris-oscuro); margin-left: 0; }
         
         .btn-play { background: var(--gris-oscuro); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: 600; }
         .btn-play:hover { background: var(--rojo-loginter); }
@@ -143,7 +186,7 @@
             background-color: #E2E8F0;
             border-radius: 10px;
             height: 8px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
         }
 
         .progress-bar {
@@ -182,7 +225,7 @@
 
     <header>
         <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
-        <div id="userInfo"></div>
+        <div id="userInfo" class="user-panel"></div>
     </header>
 
     <div id="loginSection" class="container landing-card fade-in">
@@ -201,9 +244,9 @@
         </div>
 
         <div class="mensaje-calido">
-            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
+            ... 📌 <strong>La importancia de seguir aprendiendo:</strong><br>
             En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
-            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
+            ... 🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
         </div>
     </div>
 
@@ -215,6 +258,11 @@
     </div>
 
     <div id="appSection" class="container fade-in" style="display: none;">
+        
+        <button id="btnAbandonarCurso" class="btn-abandonar">
+            <i class="fa-solid fa-arrow-left"></i> ❌ Abandonar Curso
+        </button>
+
         <div class="progress-bar-container">
             <div id="progressBar" class="progress-bar"></div>
         </div>
@@ -250,6 +298,7 @@
         let respuestasCorrectasTotales = 0;
         let preguntasEvaluadasCount = 0;
 
+        // ACCIÓN INGRESO (LOG-IN)
         document.getElementById('btnIngresar').addEventListener('click', async () => {
             usuarioDNI = document.getElementById('dniInput').value.trim();
             if(!usuarioDNI) return alert("⚠️ Por favor, ingresa tu DNI para continuar.");
@@ -270,16 +319,45 @@
                 }, { merge: true });
             }
 
+            // Renderizar datos del perfil en cabecera junto al botón de salir
             document.getElementById('userInfo').innerHTML = `
                 <span>👤 DNI: <strong>${usuarioDNI}</strong></span>
-                <span class="badge categoria-user">🏷️ Perfil: ${usuarioCategoria}</span>
+                <span class="badge categoria-user">🏷️ Rango: ${usuarioCategoria}</span>
+                <button id="btnLogOut" class="btn-logout"><i class="fa-solid fa-door-open"></i> Salir</button>
             `;
             
-            // Ocultar e intercambiar pantallas con animaciones limpias
+            // Asignar el evento dinámico al botón de deslogueo recién creado
+            document.getElementById('btnLogOut').addEventListener('click', () => {
+                cerrarSesionCompleta();
+            });
+
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('menuSection').style.display = 'block';
 
             await cargarMenuCapacitaciones();
+        });
+
+        // FUNCIÓN CERRAR SESIÓN (LOG-OUT)
+        function cerrarSesionCompleta() {
+            usuarioDNI = "";
+            usuarioCategoria = "Rep";
+            document.getElementById('dniInput').value = "";
+            document.getElementById('userInfo').innerHTML = "";
+            
+            // Ocultar paneles y mandar al login principal
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('appSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        }
+
+        // FUNCIÓN VOLVER AL MENÚ DESDE UN CURSO ACTIVO
+        document.getElementById('btnAbandonarCurso').addEventListener('click', () => {
+            const seguro = confirm("⚠️ ¿Estás seguro de que deseas salir del curso?\n\nSe perderá el progreso de este intento de lectura y las preguntas respondidas.");
+            if (seguro) {
+                document.getElementById('appSection').style.display = 'none';
+                document.getElementById('menuSection').style.display = 'block';
+                cargarMenuCapacitaciones(); // Refrescar grilla
+            }
         });
 
         async function cargarMenuCapacitaciones() {
@@ -316,31 +394,28 @@
             listaModulosLectura.forEach(curso => {
                 const div = document.createElement('div');
                 
-                let categoriasDestino = [];
+                let categoriesDestino = [];
                 if (Array.isArray(curso.categoriaAsignada)) {
-                    categoriasDestino = curso.categoriaAsignada;
+                    categoriesDestino = curso.categoriaAsignada;
                 } else if (curso.categoriaAsignada) {
-                    categoriasDestino = [curso.categoriaAsignada];
+                    categoriesDestino = [curso.categoriaAsignada];
                 }
 
-                const tieneAcceso = categoriasDestino.includes(usuarioCategoria);
+                const tieneAcceso = categoriesDestino.includes(usuarioCategoria);
 
                 if (!tieneAcceso) {
-                    // 🔒 CURSO NO PERTENECIENTE AL PERFIL
                     div.className = "item-curso bloqueado";
                     div.innerHTML = `
                         <div>📄 <strong>${curso.titulo}</strong></div>
                         <span class="badge bloqueado-txt"><i class="fa-solid fa-lock"></i> No disponible para su perfil</span>
                     `;
                 } else if (cursosHechos[curso.titulo]) {
-                    // ✅ CURSO YA APROBADO O REALIZADO
                     div.className = "item-curso";
                     div.innerHTML = `
                         <div>📄 <strong>${curso.titulo}</strong></div>
                         <span class="badge hecho">🎉 Realizado: ${cursosHechos[curso.titulo]}</span>
                     `;
                 } else {
-                    // 🚀 DISPONIBLE PARA CURSAR EN EL MOMENTO
                     div.className = "item-curso";
                     div.innerHTML = `
                         <div>📄 <strong>${curso.titulo}</strong></div>
@@ -453,7 +528,11 @@
                 }, { merge: true });
 
                 alert(`💾 Resultado registrado con éxito: ${glosaResultado}`);
-                location.reload();
+                
+                // CAMBIO CLAVE: Volver suavemente al menú principal sin reiniciar la app entera
+                document.getElementById('appSection').style.display = 'none';
+                document.getElementById('menuSection').style.display = 'block';
+                await cargarMenuCapacitaciones(); 
                 return;
             }
 
