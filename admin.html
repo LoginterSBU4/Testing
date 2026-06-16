@@ -18,7 +18,7 @@
         body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
         header { background-color: var(--gris-oscuro); color: white; padding: 15px 30px; border-bottom: 4px solid var(--rojo-loginter); }
         .admin-container { max-width: 1350px; margin: 30px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 30px; }
+        .grid { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 30px; }
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; }
         h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
         input, textarea, select { width: 100%; padding: 10px; margin: 6px 0 14px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
@@ -33,6 +33,7 @@
         .badge.success { background: #D4EDDA; color: #155724; }
         .badge.warning { background: #FFF3CD; color: #856404; }
         .badge.danger { background: #F8D7DA; color: #721C24; }
+        .badge.info { background: #CCE5FF; color: #004085; }
         .btn-control { padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; margin-right: 2px; }
     </style>
 </head>
@@ -48,11 +49,18 @@
             <div class="card">
                 <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación y Cuestionario</h3>
                 <form id="formMultiPregunta">
-                    <input type="hidden" id="edit_id">
                     <label><strong>Título de la Capacitación</strong></label>
                     <input type="text" id="tituloModulo" placeholder="Ej: Seguridad en autoelevadores" required>
                     
-                    <label><strong>Orden del Módulo (Posición numérica entera)</strong></label>
+                    <label><strong>Categoría de Destino (Quiénes deben hacerla)</strong></label>
+                    <select id="categoriaCurso" required>
+                        <option value="Rep">Rep</option>
+                        <option value="PS">PS</option>
+                        <option value="Team Leader">Team Leader</option>
+                        <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
+                    </select>
+
+                    <label><strong>Orden de Módulo (Posición numérica entera)</strong></label>
                     <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
 
                     <label><strong>Texto Instructivo Guía (Contenido)</strong></label>
@@ -74,24 +82,45 @@
                         <input type="text" id="p2_inc" placeholder="Opción Incorrecta" required>
                     </div>
 
-                    <button type="submit" class="btn-submit" id="btnGuardar">Publicar Capacitación Completa</button>
+                    <button type="submit" class="btn-submit">Publicar Capacitación Completa</button>
                 </form>
             </div>
 
-            <div class="card">
-                <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
-                <div style="overflow-x:auto; max-height: 250px;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>DNI</th>
-                                <th>Estado</th>
-                                <th>Último Examen</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaParticipantes"></tbody>
-                    </table>
+            <div>
+                <div class="card">
+                    <h3><i class="fa-solid fa-user-tag"></i> Asignar Categoría Especial a Legajo</h3>
+                    <form id="formAsignarCategoria" style="display:flex; gap:10px; align-items:center; margin-bottom: 0;">
+                        <div style="flex:1;">
+                            <input type="number" id="catDniInput" placeholder="DNI sin puntos" style="margin:0;" required>
+                        </div>
+                        <div style="flex:1;">
+                            <select id="catSelectInput" style="margin:0;" required>
+                                <option value="Rep">Rep</option>
+                                <option value="PS">PS</option>
+                                <option value="Team Leader">Team Leader</option>
+                                <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit" style="width:auto; padding: 10px 20px;">Asignar</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
+                    <div style="overflow-x:auto; max-height: 250px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>DNI</th>
+                                    <th>Categoría</th>
+                                    <th>Estado</th>
+                                    <th>Último Examen</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaParticipantes"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,6 +134,7 @@
                             <th>Orden</th>
                             <th>Tipo</th>
                             <th>Identificador / Pregunta</th>
+                            <th>Categoría Requerida</th>
                             <th>Estado Actual</th>
                             <th>Controles de Ajuste</th>
                         </tr>
@@ -117,7 +147,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",
@@ -131,17 +161,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Publicar nueva capacitación con categoría amarrada
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
+            const categoriaAsignada = document.getElementById('categoriaCurso').value;
             const orden = parseInt(document.getElementById('ordenModulo').value);
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
-                // Publicación estructurada limpia
-                await addDoc(collection(db, "modulos"), { titulo, orden, contenido, tipo: 'lectura', estado: 'activo' });
+                await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada, orden, contenido, tipo: 'lectura', estado: 'activo' });
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
+                    categoriaAsignada,
                     pregunta: document.getElementById('p1_preg').value,
                     opcionCorrecta: document.getElementById('p1_corr').value,
                     opcionIncorrecta: document.getElementById('p1_inc').value,
@@ -149,6 +181,7 @@
                 });
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.4,
+                    categoriaAsignada,
                     pregunta: document.getElementById('p2_preg').value,
                     opcionCorrecta: document.getElementById('p2_corr').value,
                     opcionIncorrecta: document.getElementById('p2_inc').value,
@@ -160,8 +193,26 @@
             } catch (err) { console.error(err); }
         });
 
+        // Evento para pre-cargar DNI y categorías
+        document.getElementById('formAsignarCategoria').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dni = document.getElementById('catDniInput').value.trim();
+            const categoria = document.getElementById('catSelectInput').value;
+
+            try {
+                await setDoc(doc(db, "participantes", dni), {
+                    dni: dni,
+                    categoria: categoria,
+                    completado: false,
+                    pruebaAprobada: "Pendiente",
+                    historialCursos: {}
+                }, { merge: true });
+                alert(`DNI ${dni} configurado como ${categoria}`);
+                location.reload();
+            } catch(err) { console.error(err); }
+        });
+
         async function cargarDatosAdmin() {
-            // 1. CARGAR TABLA PARTICIPANTES
             const tbodyPart = document.getElementById('tablaParticipantes');
             tbodyPart.innerHTML = "";
             const snapPart = await getDocs(collection(db, "participantes"));
@@ -170,13 +221,14 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${p.dni}</strong></td>
+                    <td><span class="badge info">${p.categoria || 'Rep'}</span></td>
                     <td>${p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`}</td>
                     <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
                     <td>
-                        <select class="select-acciones" data-id="${docSnap.id}" data-dni="${p.dni}" data-resultado="${p.pruebaAprobada || 'Pendiente'}">
+                        <select class="select-acciones" data-id="${docSnap.id}" data-dni="${p.dni}">
                             <option value="" disabled selected>Acciones...</option>
                             <option value="ver">👁️ Ver Historial</option>
-                            <option value="resetear">🔄 Resetear Todo</option>
+                            <option value="cambiar">🔄 Cambiar Rango</option>
                             <option value="borrar">🗑️ Eliminar</option>
                         </select>
                     </td>
@@ -184,7 +236,6 @@
                 tbodyPart.appendChild(tr);
             });
 
-            // Eventos de la tabla de participantes
             document.querySelectorAll('.select-acciones').forEach(sel => {
                 sel.addEventListener('change', async (e) => {
                     const acc = e.target.value; const id = e.target.getAttribute('data-id'); const dni = e.target.getAttribute('data-dni');
@@ -201,8 +252,12 @@
                         const w = window.open("", "_blank", "width=500,height=400");
                         w.document.write(`<html><body><h3>Cursos de Legajo: ${dni}</h3>${textoHistorial || '<p>Sin registros avanzados.</p>'}</body></html>`);
                         w.document.close();
-                    } else if (acc === 'resetear') {
-                        if(confirm("¿Resetear?")) { await updateDoc(doc(db, "participantes", id), { historialCursos: {}, pruebaAprobada: "Pendiente", completado: false }); location.reload(); }
+                    } else if (acc === 'cambiar') {
+                        const nuevaCat = prompt("Elige la nueva categoría (Rep, PS, Team Leader, Jefe/Responsable/Gerente):");
+                        if(nuevaCat) {
+                            await updateDoc(doc(db, "participantes", id), { categoria: nuevaCat });
+                            location.reload();
+                        }
                     } else if (acc === 'borrar') {
                         if(confirm("¿Eliminar?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
                     }
@@ -210,7 +265,7 @@
                 });
             });
 
-            // 2. GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
+            // GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
             const tbodyMod = document.getElementById('tablaModulos');
             tbodyMod.innerHTML = "";
             const snapMod = await getDocs(collection(db, "modulos"));
@@ -227,6 +282,7 @@
                     <td>${m.orden}</td>
                     <td><span class="badge ${m.tipo === 'lectura' ? 'success' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
                     <td>${labelInfo}</td>
+                    <td><span class="badge info">${m.categoriaAsignada || 'Rep'}</span></td>
                     <td>${estadoBadge}</td>
                     <td>
                         <button class="btn-control btn-status" data-id="${m.id}" data-status="${m.estado || 'activo'}">👁️ Ver/Pausar</button>
@@ -237,13 +293,10 @@
                 tbodyMod.appendChild(tr);
             });
 
-            // Manejadores del Gestor de Contenidos
             document.querySelectorAll('.btn-status').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
                     const current = e.target.getAttribute('data-status');
-                    const nextStatus = current === 'desactivado' ? 'activo' : 'desactivated'; 
-                    // Normalización del flag
                     await updateDoc(doc(db, "modulos", id), { estado: (current === 'desactivado' ? 'activo' : 'desactivado') });
                     location.reload();
                 });
@@ -251,7 +304,7 @@
 
             document.querySelectorAll('.btn-del-mod').forEach(b => {
                 b.addEventListener('click', async (e) => {
-                    if(confirm("¿Eliminar este componente del examen/lectura?")) {
+                    if(confirm("¿Eliminar componente?")) {
                         await deleteDoc(doc(db, "modulos", e.target.getAttribute('data-id')));
                         location.reload();
                     }
@@ -262,14 +315,14 @@
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
                     const tipo = e.target.getAttribute('data-tipo');
-                    const nuevoTexto = prompt("Introduce el nuevo texto de actualización para este registro:");
+                    const nuevoTexto = prompt("Introduce el nuevo texto:");
                     if(nuevoTexto) {
                         if(tipo === 'lectura') {
                             await updateDoc(doc(db, "modulos", id), { contenido: nuevoTexto });
                         } else {
                             await updateDoc(doc(db, "modulos", id), { pregunta: nuevoTexto });
                         }
-                        alert("Modificado."); location.reload();
+                        location.reload();
                     }
                 });
             });
