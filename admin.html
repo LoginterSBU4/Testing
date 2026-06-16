@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loginter - Panel Administrativo</title>
+    <title>Loginter - Panel Administrativo IA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -13,6 +13,7 @@
             --gris-oscuro: #2B2D42;
             --gris-fondo: #EDF2F4;
             --blanco: #FFFFFF;
+            --azul-ia: #4361EE;
         }
 
         body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
@@ -28,8 +29,15 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
         th { background-color: var(--gris-oscuro); color: white; }
+        
         .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
         .btn-submit:hover { background-color: #EF233C; }
+        
+        /* ✨ Estilos especiales para el botón de IA */
+        .btn-ia { background: var(--azul-ia); color: white; border: none; padding: 10px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 15px; font-size: 13px; width: 100%; transition: 0.2s; }
+        .btn-ia:hover { background-color: #3046C5; }
+        .btn-ia:disabled { background-color: #94A3B8; cursor: not-allowed; }
+
         .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0;}
         .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge.success { background: #D4EDDA; color: #155724; }
@@ -42,50 +50,63 @@
 <body>
 
     <header>
-        <h2><i class="fa-solid fa-sliders"></i> Panel de administración de capacitaciones SBU4</h2>
+        <h2><i class="fa-solid fa-sliders"></i> Panel de administración de capacitaciones SBU4 🛠️</h2>
     </header>
 
     <div class="admin-container">
+        
+        <div class="card" style="border-left: 5px solid var(--azul-ia);">
+            <h3 style="color: var(--azul-ia);"><i class="fa-solid fa-brain"></i> Configuración del Asistente de IA (Gemini)</h3>
+            <p style="font-size: 13px; margin: 0 0 10px 0; color: #475569;">
+                Ingresá tu clave de API de Google Gemini para habilitar la conversión automática de textos y creación de trivias dinámicas.
+            </p>
+            <input type="password" id="geminiApiKey" placeholder="Pegá acá tu tu API Key de Gemini (AIzaSy...)" style="margin: 0;">
+        </div>
+
         <div class="grid">
             
             <div class="card">
-                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación y Cuestionario</h3>
+                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación e IA</h3>
                 <form id="formMultiPregunta">
-                    <label><strong>Título de la Capacitación</strong></label>
-                    <input type="text" id="tituloModulo" placeholder="Ej: Seguridad en autoelevadores" required>
+                    <label><strong>Título de la Capacitación 🎯</strong></label>
+                    <input type="text" id="tituloModulo" placeholder="Ej: Operaciones Seguras de Autoelevadores" required>
                     
-                    <label><strong>Categorías de Destino (Multi-opción)</strong></label>
+                    <label><strong>Categorías de Destino (Multi-opción) 👥</strong></label>
                     <select id="categoriaCurso" multiple required>
                         <option value="Rep">Rep</option>
                         <option value="PS">PS</option>
                         <option value="Team Leader">Team Leader</option>
                         <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
                     </select>
-                    <span class="hint-text"><i class="fa-solid fa-info-circle"></i> Mantén presionado Ctrl (Windows) o Cmd (Mac) para elegir varias categorías.</span>
+                    <span class="hint-text"><i class="fa-solid fa-info-circle"></i> Mantené presionado Ctrl o Cmd para elegir varios perfiles.</span>
 
-                    <label><strong>Orden de Módulo (Posición numérica entera)</strong></label>
+                    <label><strong>Orden de Módulo (Número entero) 🔢</strong></label>
                     <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
 
-                    <label><strong>Texto Instructivo Guía (Contenido)</strong></label>
-                    <textarea id="contenidoModulo" rows="5" placeholder="Pega el manual o instructivo..." required></textarea>
+                    <label><strong>Texto Instructivo Base / Contenido Crudo 📝</strong></label>
+                    <textarea id="contenidoModulo" rows="7" placeholder="Pegá acá el manual de Loginter técnico o aburrido tal cual viene..." required></textarea>
 
-                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación</h4>
+                    <button type="button" id="btnProcesarIA" class="btn-ia">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> ✨ Optimizar Contenido y Crear Trivia con IA
+                    </button>
+
+                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Banco de Evaluación (Auto-generado o manual)</h4>
 
                     <div class="seccion-pregunta">
-                        <strong>Pregunta 1 (Obligatoria)</strong>
-                        <input type="text" id="p1_preg" placeholder="Pregunta 1" required>
-                        <input type="text" id="p1_corr" placeholder="Opción Correcta" required>
-                        <input type="text" id="p1_inc" placeholder="Opción Incorrecta" required>
+                        <strong>Pregunta 1 (Interactiva) 🤔</strong>
+                        <input type="text" id="p1_preg" placeholder="Esperando IA o carga manual..." required>
+                        <input type="text" id="p1_corr" placeholder="Opción Correcta 🟢" required>
+                        <input type="text" id="p1_inc" placeholder="Opción Incorrecta 🔵" required>
                     </div>
 
                     <div class="seccion-pregunta">
-                        <strong>Pregunta 2 (Obligatoria)</strong>
-                        <input type="text" id="p2_preg" placeholder="Pregunta 2" required>
-                        <input type="text" id="p2_corr" placeholder="Opción Correcta" required>
-                        <input type="text" id="p2_inc" placeholder="Opción Incorrecta" required>
+                        <strong>Pregunta 2 (Interactiva) 🤔</strong>
+                        <input type="text" id="p2_preg" placeholder="Esperando IA o carga manual..." required>
+                        <input type="text" id="p2_corr" placeholder="Opción Correcta 🟢" required>
+                        <input type="text" id="p2_inc" placeholder="Opción Incorrecta 🔵" required>
                     </div>
 
-                    <button type="submit" class="btn-submit">Publicar Capacitación Completa</button>
+                    <button type="submit" class="btn-submit">Publicar Capacitación Completa 🚀</button>
                 </form>
             </div>
 
@@ -164,7 +185,85 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Capturar valores del select múltiple estructurados como un array limpio
+        // --- 🧠 CONEXIÓN E INTEGRACIÓN CON LA IA DE GOOGLE GEMINI ---
+        document.getElementById('btnProcesarIA').addEventListener('click', async () => {
+            const apiKey = document.getElementById('geminiApiKey').value.trim();
+            const contenidoCrudo = document.getElementById('contenidoModulo').value.trim();
+            const titulo = document.getElementById('tituloModulo').value.trim();
+
+            if (!apiKey) return alert("⚠️ Por favor, introduce tu Gemini API Key en el campo superior.");
+            if (!contenidoCrudo) return alert("⚠️ Escribe o pega algún contenido en el cuadro de texto antes de llamar a la IA.");
+
+            const btn = document.getElementById('btnProcesarIA');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando y analizando con IA...`;
+
+            // Prompt maestro con estructura estricta en formato JSON para mapearlo de inmediato al formulario
+            const promptMaestro = `
+            Actúa como un instructor pedagógico experto en operaciones logísticas. 
+            Quiero que analices el siguiente texto técnico perteneciente a la capacitación llamada "${titulo}".
+            
+            Tu tarea consiste en hacer 2 cosas:
+            1. Reestructurar el texto para que NO sea una lectura literal o aburrida. Hazlo dinámico, amable, enfocado en el operario, usando viñetas claras, advertencias importantes y emoticones amigables.
+            2. Crear exactamente 2 preguntas de opción múltiple interactiva basadas en situaciones del día a día (casos prácticos de depósito o distribución), no teóricas de memoria. Cada pregunta debe tener una opción correcta clara y una opción incorrecta verosímil.
+
+            Devuelve el resultado estrictamente en el siguiente formato estructurado JSON sin comentarios y sin bloques de código markdown:
+            {
+              "contenidoDidactico": "AQUÍ_EL_TEXTO_REESCRITO_CON_EMOJIS_Y_VIÑETAS",
+              "p1_pregunta": "Texto de la situación interactiva 1",
+              "p1_correcta": "Respuesta correcta a la situación 1",
+              "p1_incorrecta": "Respuesta incorrecta plausible para la situación 1",
+              "p2_pregunta": "Texto de la situación interactiva 2",
+              "p2_correcta": "Respuesta correcta a la situación 2",
+              "p2_incorrecta": "Respuesta incorrecta plausible para la situación 2"
+            }
+
+            Texto técnico a procesar:
+            ${contenidoCrudo}
+            `;
+
+            try {
+                // Endpoint directo de Gemini 1.5 Flash (ideal para texto y respuestas rápidas)
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptMaestro }] }]
+                    })
+                });
+
+                const data = await response.json();
+                let respuestaTexto = data.candidates[0].content.parts[0].text;
+                
+                // Limpiar posibles bloques de formato markdown que devuelva la IA de forma rebelde
+                respuestaTexto = respuestaTexto.replace(/```json/g, "").replace(/```/g, "").trim();
+
+                const objetoResultado = JSON.parse(respuestaTexto);
+
+                // Auto-rellenar el formulario con el procesamiento de la IA
+                document.getElementById('contenidoModulo').value = objetoResultado.contenidoDidactico;
+                document.getElementById('p1_preg').value = objetoResultado.p1_pregunta;
+                document.getElementById('p1_corr').value = objetoResultado.p1_correcta;
+                document.getElementById('p1_inc').value = objetoResultado.p1_incorrecta;
+                document.getElementById('p2_preg').value = objetoResultado.p2_pregunta;
+                document.getElementById('p2_corr').value = objetoResultado.p2_correcta;
+                document.getElementById('p2_inc').value = objetoResultado.p2_incorrecta;
+
+                alert("✨ ¡Contenido transformado y evaluaciones creadas con éxito! Revisa los campos antes de publicar.");
+
+            } catch (error) {
+                console.error(error);
+                alert("❌ Error al procesar con IA. Asegúrate de que la API Key sea correcta y que la respuesta devuelta sea un JSON válido.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ✨ Optimizar Contenido y Crear Trivia con IA`;
+            }
+        });
+
+
+        // --- FUNCIONALIDADES BASE DE FIREBASE ---
         function getSelectedCategories(selectElement) {
             return Array.from(selectElement.selectedOptions).map(opt => opt.value);
         }
@@ -177,7 +276,6 @@
             const contenido = document.getElementById('contenidoModulo').value;
 
             try {
-                // Se guardan las categorías estructuradas como matriz
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
                 await addDoc(collection(db, "modulos"), {
                     orden: orden + 0.2,
@@ -196,7 +294,7 @@
                     tipo: 'trivia', estado: 'activo'
                 });
 
-                alert("¡Publicado exitosamente para múltiples perfiles!");
+                alert("¡Publicado exitosamente!");
                 location.reload();
             } catch (err) { console.error(err); }
         });
@@ -272,7 +370,6 @@
                 });
             });
 
-            // GESTOR DE MATERIALES CAPACITACIONES (TABLA INFERIOR)
             const tbodyMod = document.getElementById('tablaModulos');
             tbodyMod.innerHTML = "";
             const snapMod = await getDocs(collection(db, "modulos"));
@@ -285,7 +382,6 @@
                 const estadoBadge = m.estado === 'desactivado' ? `<span class="badge danger">Pausado</span>` : `<span class="badge success">Activo</span>`;
                 const labelInfo = m.tipo === 'lectura' ? `<strong>CURSO: ${m.titulo}</strong>` : `Pregunta: ${m.pregunta}`;
                 
-                // Formatear visualización de múltiples categorías asignadas al módulo
                 let stringCategorias = "";
                 if (Array.isArray(m.categoriaAsignada)) {
                     stringCategorias = m.categoriaAsignada.join(', ');
@@ -297,19 +393,18 @@
                     <td>${m.orden}</td>
                     <td><span class="badge ${m.tipo === 'lectura' ? 'success' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
                     <td>${labelInfo}</td>
-                    <td><span class="badge info" id="catLabel-${m.id}">${stringCategorias}</span></td>
+                    <td><span class="badge info">${stringCategorias}</span></td>
                     <td>${estadoBadge}</td>
                     <td>
                         <button class="btn-control btn-status" data-id="${m.id}" data-status="${m.estado || 'activo'}">👁️ Ver/Pausar</button>
                         <button class="btn-control btn-edit" data-id="${m.id}" data-tipo="${m.tipo}">✏️ Contenido</button>
-                        <button class="btn-control btn-edit-cat" data-id="${m.id}">🏷️ Editar Categorías</button>
+                        <button class="btn-control btn-edit-cat" data-id="${m.id}">🏷️ Editar Cat</button>
                         <button class="btn-control btn-del-mod" data-id="${m.id}" style="color:red;">🗑️ Borrar</button>
                     </td>
                 `;
                 tbodyMod.appendChild(tr);
             });
 
-            // Acción para Cambiar/Pausar Módulo
             document.querySelectorAll('.btn-status').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -319,7 +414,6 @@
                 });
             });
 
-            // Acción para Eliminar Módulo
             document.querySelectorAll('.btn-del-mod').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     if(confirm("¿Eliminar componente?")) {
@@ -329,7 +423,6 @@
                 });
             });
 
-            // Acción para Editar el texto interior/pregunta
             document.querySelectorAll('.btn-edit').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
@@ -346,17 +439,14 @@
                 });
             });
 
-            // NUEVA ACCIÓN: Editar categorías requeridas en caliente (Multi-opción separada por coma)
             document.querySelectorAll('.btn-edit-cat').forEach(b => {
                 b.addEventListener('click', async (e) => {
                     const id = e.target.getAttribute('data-id');
                     const inputUser = prompt("Asigna las categorías válidas separadas por comas (Ej: Rep, PS, Team Leader):");
                     if (inputUser !== null) {
                         const arrayFormat = inputUser.split(',').map(s => s.trim()).filter(s => s.length > 0);
-                        if(arrayFormat.length === 0) return alert("Debes ingresar al menos una categoría válida.");
-                        
+                        if(arrayFormat.length === 0) return alert("Debes ingresar al menos una categoría.");
                         await updateDoc(doc(db, "modulos", id), { categoriaAsignada: arrayFormat });
-                        alert("Categorías actualizadas correctamente.");
                         location.reload();
                     }
                 });
