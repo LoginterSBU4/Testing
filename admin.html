@@ -37,8 +37,18 @@
         .badge.warning { background: #FEF3C7; color: #92400E; }
         .badge.danger { background: #F8D7DA; color: #721C24; }
         .badge.info { background: #CCE5FF; color: #004085; }
-        .btn-control { padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; margin-right: 2px; }
+        .btn-control { padding: 6px 10px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid var(--rojo-loginter); background: #fff; color: var(--rojo-loginter); font-weight: bold; }
+        .btn-control:hover { background: var(--rojo-loginter); color: white; }
         .banco-preguntas-scroll { max-height: 400px; overflow-y: auto; border: 1px solid #CBD5E1; padding: 10px; border-radius: 6px; background: #F1F5F9; }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:10000; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 15px 0; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+        .checkbox-item input { width: auto; margin: 0; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-close-modal { background: #64748B; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -62,7 +72,7 @@
                         <option value="PS">PS</option>
                         <option value="Team Leader">Team Leader</option>
                         <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
-                        <option value="Ninguna">🔒 Ninguna (Desactivado)</option>
+                        <option value="Ninguna">🔒 Ninguna (Acceso Abierto Completo)</option>
                     </select>
                     <span class="hint-text">Usa Ctrl o Cmd para seleccionar varias.</span>
 
@@ -94,26 +104,6 @@
                             <strong>Pregunta 5 (Opcional)</strong>
                             <input type="text" id="p5_preg" placeholder="Pregunta 5"><input type="text" id="p5_corr" placeholder="Correcta"><input type="text" id="p5_inc" placeholder="Incorrecta">
                         </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 6 (Opcional)</strong>
-                            <input type="text" id="p6_preg" placeholder="Pregunta 6"><input type="text" id="p6_corr" placeholder="Correcta"><input type="text" id="p6_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 7 (Opcional)</strong>
-                            <input type="text" id="p7_preg" placeholder="Pregunta 7"><input type="text" id="p7_corr" placeholder="Correcta"><input type="text" id="p7_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 8 (Opcional)</strong>
-                            <input type="text" id="p8_preg" placeholder="Pregunta 8"><input type="text" id="p8_corr" placeholder="Correcta"><input type="text" id="p8_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 9 (Opcional)</strong>
-                            <input type="text" id="p9_preg" placeholder="Pregunta 9"><input type="text" id="p9_corr" placeholder="Correcta"><input type="text" id="p9_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 10 (Opcional)</strong>
-                            <input type="text" id="p10_preg" placeholder="Pregunta 10"><input type="text" id="p10_corr" placeholder="Correcta"><input type="text" id="p10_inc" placeholder="Incorrecta">
-                        </div>
                     </div>
                     <button type="submit" class="btn-submit" style="margin-top:15px;">Publicar Capacitación 🚀</button>
                 </form>
@@ -141,7 +131,7 @@
         </div>
 
         <div class="card">
-            <h3><i class="fa-solid fa-layer-group"></i> Gestor de Módulos</h3>
+            <h3><i class="fa-solid fa-layer-group"></i> Gestor de Documentos</h3>
             <div style="overflow-x:auto;">
                 <table>
                     <thead>
@@ -149,6 +139,50 @@
                     </thead>
                     <tbody id="tablaModulos"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalGestion" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="border-bottom: 2px solid var(--rojo-loginter); color: var(--gris-oscuro);">
+                <i class="fa-solid fa-gear"></i> Modificar Contenido de Capacitación
+            </h3>
+            <input type="hidden" id="edit_id">
+            <input type="hidden" id="edit_tipo">
+
+            <label><strong>Orden del Módulo 🔢</strong></label>
+            <input type="number" step="0.01" id="edit_orden" required>
+
+            <label><strong>Identificador (Título / Pregunta) 🎯</strong></label>
+            <input type="text" id="edit_identificador" required>
+
+            <label id="labelContenido font-weight:bold;"><strong>Texto de la Capacitación / Contenido 📝</strong></label>
+            <textarea id="edit_contenido" rows="5"></textarea>
+
+            <label><strong>Estado de Disponibilidad (Selección Única) 🔒</strong></label>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="status_activo" class="single-status-check"> 🟢 Activado (Visible en plataforma)
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="status_desactivado" class="single-status-check"> 🔴 Desactivado (Ocultar curso y evaluaciones)
+                </label>
+            </div>
+
+            <label><strong>Categorías Jerárquicas Necesarias (Selección Múltiple) 👥</strong></label>
+            <div class="checkbox-group" style="background: #F8FAFC; padding: 12px; border-radius: 6px;">
+                <label class="checkbox-item"><input type="checkbox" id="cat_all" class="cat-check"> 🌍 Todas (Acceso a toda la nómina)</label>
+                <label class="checkbox-item"><input type="checkbox" value="Rep" class="cat-check"> Rep</label>
+                <label class="checkbox-item"><input type="checkbox" value="PS" class="cat-check"> PS</label>
+                <label class="checkbox-item"><input type="checkbox" value="Team Leader" class="cat-check"> Team Leader</label>
+                <label class="checkbox-item"><input type="checkbox" value="Jefe/Responsable/Gerente" class="cat-check"> Jefe/Responsable/Gerente</label>
+                <label class="checkbox-item"><input type="checkbox" id="cat_none" class="cat-check"> 🔓 Ninguna (Cualquiera que ingrese)</label>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-close-modal" id="btnCancelarModal">Cancelar</button>
+                <button type="button" class="btn-submit" id="btnGuardarModal" style="width: auto; padding: 10px 25px;">Guardar Cambios 💾</button>
             </div>
         </div>
     </div>
@@ -169,12 +203,33 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Controladores para selección única del estado en el modal
+        document.querySelectorAll('.single-status-check').forEach(box => {
+            box.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.querySelectorAll('.single-status-check').forEach(b => { if(b !== e.target) b.checked = false; });
+                }
+            });
+        });
+
+        // Controladores de Categorías en el Modal
+        document.getElementById('cat_all').addEventListener('change', (e) => {
+            if(e.target.checked) {
+                document.getElementById('cat_none').checked = false;
+                document.querySelectorAll('.cat-check').forEach(b => { if(b.id !== 'cat_none') b.checked = true; });
+            }
+        });
+        document.getElementById('cat_none').addEventListener('change', (e) => {
+            if(e.target.checked) {
+                document.querySelectorAll('.cat-check').forEach(b => { b.checked = false; });
+                document.getElementById('cat_none').checked = true;
+            }
+        });
+
         document.getElementById('categoriaCurso').addEventListener('change', (e) => {
             const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
             if (selectedOptions.includes('Todas')) {
-                Array.from(e.target.options).forEach(opt => {
-                    if (opt.value !== 'Ninguna') opt.selected = true;
-                });
+                Array.from(e.target.options).forEach(opt => { if (opt.value !== 'Ninguna') opt.selected = true; });
             } else if (selectedOptions.includes('Ninguna')) {
                 Array.from(e.target.options).forEach(opt => { opt.selected = (opt.value === 'Ninguna'); });
             }
@@ -250,7 +305,7 @@
             try {
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
                 let promesas = [];
-                for (let i = 1; i <= 10; i++) {
+                for (let i = 1; i <= 5; i++) {
                     const preg = document.getElementById(`p${i}_preg`).value.trim();
                     const corr = document.getElementById(`p${i}_corr`).value.trim();
                     const inc = document.getElementById(`p${i}_inc`).value.trim();
@@ -267,6 +322,111 @@
                 alert("¡Guardado correctamente!");
                 location.reload();
             } catch (err) { alert("Error al guardar."); }
+        });
+
+        // Configuración y apertura del modal dinámico
+        window.abrirModalGestion = function(id, tipo, orden, identificador, contenido, estado, catsJSON) {
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_tipo').value = tipo;
+            document.getElementById('edit_orden').value = orden;
+            document.getElementById('edit_identificador').value = identificador;
+            document.getElementById('edit_contenido').value = contenido || "";
+
+            if(tipo === 'trivia') {
+                document.getElementById('edit_contenido').style.display = "none";
+                document.getElementById('labelContenido').style.display = "none";
+            } else {
+                document.getElementById('edit_contenido').style.display = "block";
+                document.getElementById('labelContenido').style.display = "block";
+            }
+
+            if(estado === 'desactivado') {
+                document.getElementById('status_desactivado').checked = true;
+                document.getElementById('status_activo').checked = false;
+            } else {
+                document.getElementById('status_activo').checked = true;
+                document.getElementById('status_desactivado').checked = false;
+            }
+
+            // Reset de checkboxes de categorías
+            document.querySelectorAll('.cat-check').forEach(b => b.checked = false);
+            let categorias = [];
+            try { categorias = JSON.parse(decodeURIComponent(catsJSON)); } catch(e){}
+
+            if(categorias.length === 0) {
+                document.getElementById('cat_none').checked = true;
+            } else if(categorias.includes("Rep") && categorias.includes("PS") && categorias.includes("Team Leader") && categorias.includes("Jefe/Responsable/Gerente")) {
+                document.getElementById('cat_all').checked = true;
+                document.querySelectorAll('.cat-check').forEach(b => { if(b.id !== 'cat_none') b.checked = true; });
+            } else {
+                document.querySelectorAll('.cat-check').forEach(b => {
+                    if(categorias.includes(b.value)) b.checked = true;
+                });
+            }
+
+            document.getElementById('modalGestion').style.display = "flex";
+        }
+
+        document.getElementById('btnCancelarModal').addEventListener('click', () => {
+            document.getElementById('modalGestion').style.display = "none";
+        });
+
+        document.getElementById('btnGuardarModal').addEventListener('click', async () => {
+            const id = document.getElementById('edit_id').value;
+            const tipo = document.getElementById('edit_tipo').value;
+            const orden = parseFloat(document.getElementById('edit_orden').value);
+            const identificador = document.getElementById('edit_identificador').value;
+            const contenido = document.getElementById('edit_contenido').value;
+
+            let nuevoEstado = document.getElementById('status_desactivado').checked ? 'desactivado' : 'activo';
+
+            let categoriasSeleccionadas = [];
+            if(!document.getElementById('cat_none').checked) {
+                if(document.getElementById('cat_all').checked) {
+                    categoriasSeleccionadas = ["Rep", "PS", "Team Leader", "Jefe/Responsable/Gerente"];
+                } else {
+                    document.querySelectorAll('.cat-check').forEach(b => {
+                        if(b.checked && b.value) categoriasSeleccionadas.push(b.value);
+                    });
+                }
+            }
+
+            try {
+                let dataUpdate = {
+                    orden: orden,
+                    estado: nuevoEstado,
+                    categoriaAsignada: categoriasSeleccionadas
+                };
+
+                if(tipo === 'lectura') {
+                    dataUpdate.titulo = identificador;
+                    dataUpdate.contenido = contenido;
+                } else {
+                    dataUpdate.pregunta = identificador;
+                }
+
+                // Guardar el elemento principal
+                await updateDoc(doc(db, "modulos", id), dataUpdate);
+
+                // Cascada: Si se desactiva una lectura, se desactivan automáticamente las trivias con el mismo orden base entero
+                if(tipo === 'lectura' && nuevoEstado === 'desactivado') {
+                    const baseOrden = Math.floor(orden);
+                    const querySnapshot = await getDocs(collection(db, "modulos"));
+                    let promesasCascada = [];
+                    querySnapshot.forEach(d => {
+                        if(d.id !== id && Math.floor(d.data().orden) === baseOrden) {
+                            promesasCascada.push(updateDoc(doc(db, "modulos", d.id), { estado: 'desactivado' }));
+                        }
+                    });
+                    if(promesasCascada.length > 0) await Promise.all(promesasCascada);
+                }
+
+                alert("¡Cambios y dependencias actualizados con éxito!");
+                document.getElementById('modalGestion').style.display = "none";
+                location.reload();
+            } catch(e) {
+                alert("Error al actualizar: " + e.message);
+            }
         });
 
         async function cargarDatosAdmin() {
@@ -292,7 +452,7 @@
                     <td>${estadoBadge}</td>
                     <td style="font-size:11px;">${historialStr}</td>
                     <td>
-                        <select class="select-acciones" data-id="${docSnap.id}" data-dni="${p.dni}">
+                        <select class="select-acciones" data-id="${docSnap.id}">
                             <option value="" disabled selected>Acciones...</option>
                             <option value="resetear">🗑️ Resetear (Sin Cursar)</option>
                             <option value="borrar">❌ Borrar Legajo</option>
@@ -307,11 +467,11 @@
                     const acc = e.target.value; const id = e.target.getAttribute('data-id');
                     if (acc === 'resetear') {
                         if(confirm("¿Restablecer este usuario a 'Sin Cursar'?")) {
-                            await updateDoc(doc(db, "participantes", id), { completado: false, pruebaAprobada: "Pendiente", historialCursos: {} });
+                            await updateDoc(doc(db, "participantes", id), { completado: false, historialCursos: {} });
                             location.reload();
                         }
                     } else if (acc === 'borrar') {
-                        if(confirm("¿Borrar legajo?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
+                        if(confirm("¿Borrar legajo permanente?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
                     }
                 });
             });
@@ -323,14 +483,24 @@
 
             modulos.forEach(m => {
                 const tr = document.createElement('tr');
-                let cats = Array.isArray(m.categoriaAsignada) ? m.categoriaAsignada.join(', ') : m.categoriaAsignada;
+                let cats = Array.isArray(m.categoriaAsignada) ? m.categoriaAsignada : [];
+                let catsStr = cats.length === 0 ? 'Ninguna (Abierto)' : cats.join(', ');
+                let identificadorText = m.tipo === 'lectura' ? m.titulo : m.pregunta;
+                let contenidoLimpio = m.tipo === 'lectura' ? (m.contenido || "").replace(/'/g, "\\'") : "";
+                let catsJSON = encodeURIComponent(JSON.stringify(cats));
+                let estadoActual = m.estado || 'activo';
+
                 tr.innerHTML = `
-                    <td>${m.orden}</td>
-                    <td>${m.tipo.toUpperCase()}</td>
-                    <td>${m.tipo === 'lectura' ? m.titulo : m.pregunta}</td>
-                    <td>${cats || 'Ninguna'}</td>
-                    <td>${m.estado || 'activo'}</td>
-                    <td><button class="btn-control text-danger" onclick="alert('Usa los controles nativos para eliminar o editar el nodo id: ${m.id}')">⚙️ Gestionar</button></td>
+                    <td><strong>${m.orden}</strong></td>
+                    <td><span class="badge ${m.tipo === 'lectura' ? 'info' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
+                    <td>${identificadorText}</td>
+                    <td><span style="font-size:11px;">${catsStr}</span></td>
+                    <td><span class="badge ${estadoActual === 'activo' ? 'success' : 'danger'}">${estadoActual.toUpperCase()}</span></td>
+                    <td>
+                        <button class="btn-control" onclick="abrirModalGestion('${m.id}', '${m.tipo}', ${m.orden}, '${identificadorText.replace(/'/g, "\\'")}', '${contenidoLimpio.replace(/\n/g, '\\n')}', '${estadoActual}', '${catsJSON}')">
+                            <i class="fa-solid fa-gear"></i> Gestionar
+                        </button>
+                    </td>
                 `;
                 tbodyMod.appendChild(tr);
             });
