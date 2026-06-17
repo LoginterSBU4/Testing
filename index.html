@@ -35,6 +35,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* CARTEL DE BIENVENIDA FLOTANTE */
         .welcome-banner {
             position: fixed;
             top: 25px;
@@ -129,14 +130,14 @@
 
         .alpha-badge {
             background-color: #FFF3CD;
-            color: #856404;
+            color: #92400E;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
             display: inline-block;
             margin-bottom: 20px;
-            border: 1px solid #FFEBAA;
+            border: 1px solid #FDE68A;
         }
 
         .mensaje-calido {
@@ -340,6 +341,64 @@
         }
         .btn-nav.next { background-color: var(--gris-oscuro); color: white; }
         .btn-nav.next:hover { background-color: var(--rojo-loginter); }
+
+        /* MODALES E INTERFACES DE DIÁLOGO PERSONALIZADOS */
+        .custom-dialog-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeInEase 0.2s ease-out;
+        }
+        .custom-dialog {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+        .dialog-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--gris-oscuro);
+        }
+        .dialog-message {
+            font-size: 14px;
+            color: #475569;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+        .dialog-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-dialog-confirm {
+            background-color: var(--rojo-loginter);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-dialog-confirm:hover { background-color: var(--rojo-hover); }
+        .btn-dialog-cancel {
+            background-color: #E2E8F0;
+            color: #475569;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-dialog-cancel:hover { background-color: #CBD5E1; }
     </style>
 </head>
 <body>
@@ -352,13 +411,24 @@
         </div>
     </div>
 
+    <div id="customDialogOverlay" class="custom-dialog-overlay">
+        <div class="custom-dialog">
+            <h4 class="dialog-title" id="dialogTitle">Aviso del Sistema</h4>
+            <p class="dialog-message" id="dialogMessage">¿Deseas realizar esta acción?</p>
+            <div class="dialog-actions">
+                <button class="btn-dialog-cancel" id="btnDialogCancel">Cancelar</button>
+                <button class="btn-dialog-confirm" id="btnDialogConfirm">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <header>
         <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
         <div id="userInfo" class="user-panel"></div>
     </header>
 
     <div id="loginSection" class="container landing-card fade-in">
-        <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.2</span>
+        <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.4</span>
         
         <i class="fa-solid fa-graduation-cap" style="font-size: 60px; color: var(--rojo-loginter); margin-bottom: 15px; display:block;"></i>
         <h2>¡Te damos la bienvenida! 👋</h2>
@@ -366,10 +436,16 @@
             Tu portal centralizado de entrenamiento operativo y desarrollo profesional continuo.
         </p>
 
-        <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+        <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px;">
             <label style="font-weight: 600; font-size: 14px; color: var(--gris-oscuro);">🪪 Ingresá tu número de DNI para comenzar:</label>
             <input type="number" id="dniInput" placeholder="Ej: 35123456 (sin puntos ni espacios)">
             <button class="btn-loginter" id="btnIngresar">Ingresar a la Academia 🚀</button>
+        </div>
+
+        <div class="mensaje-calido">
+            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
+            En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
+            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo (Versión 0.4)</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible, integrando herramientas dinámicas e interfaces más amigables. ¡Gracias por formar parte e impulsar nuestro crecimiento colectivo!</em>
         </div>
     </div>
 
@@ -426,9 +502,65 @@
         let preguntasEvaluadasCount = 0;
         let opcionCorrectaActualVal = ""; 
 
+        function customAlert(message) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customDialogOverlay');
+                const title = document.getElementById('dialogTitle');
+                const msg = document.getElementById('dialogMessage');
+                const btnConfirm = document.getElementById('btnDialogConfirm');
+                const btnCancel = document.getElementById('btnDialogCancel');
+
+                title.textContent = "Mensaje del Sistema";
+                msg.textContent = message;
+                btnCancel.style.display = "none";
+                btnConfirm.textContent = "Aceptar";
+                overlay.style.display = "flex";
+
+                function onConfirm() {
+                    overlay.style.display = "none";
+                    btnConfirm.removeEventListener('click', onConfirm);
+                    resolve();
+                }
+                btnConfirm.addEventListener('click', onConfirm);
+            });
+        }
+
+        function customConfirm(message) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customDialogOverlay');
+                const title = document.getElementById('dialogTitle');
+                const msg = document.getElementById('dialogMessage');
+                const btnConfirm = document.getElementById('btnDialogConfirm');
+                const btnCancel = document.getElementById('btnDialogCancel');
+
+                title.textContent = "Confirmación Requerida";
+                msg.textContent = message;
+                btnCancel.style.display = "block";
+                btnConfirm.textContent = "Aceptar";
+                overlay.style.display = "flex";
+
+                function onConfirm() {
+                    overlay.style.display = "none";
+                    cleanup();
+                    resolve(true);
+                }
+                function onCancel() {
+                    overlay.style.display = "none";
+                    cleanup();
+                    resolve(false);
+                }
+                function cleanup() {
+                    btnConfirm.removeEventListener('click', onConfirm);
+                    btnCancel.removeEventListener('click', onCancel);
+                }
+                btnConfirm.addEventListener('click', onConfirm);
+                btnCancel.addEventListener('click', onCancel);
+            });
+        }
+
         document.getElementById('btnIngresar').addEventListener('click', async () => {
             usuarioDNI = document.getElementById('dniInput').value.trim();
-            if(!usuarioDNI) return alert("⚠️ Por favor, ingresa tu DNI para continuar.");
+            if(!usuarioDNI) return customAlert("⚠️ Por favor, ingresa tu DNI para continuar.");
 
             const userRef = doc(db, "participantes", usuarioDNI);
             const userSnap = await getDoc(userRef);
@@ -481,7 +613,7 @@
         }
 
         document.getElementById('btnAbandonarCurso').addEventListener('click', async () => {
-            const seguro = confirm("⚠️ ¿Estás seguro de que deseas salir?\n\nTu progreso quedará guardado como 'Incompleto'.");
+            const seguro = await customConfirm("⚠️ ¿Estás seguro de que deseas salir?\n\nTu progreso quedará guardado como 'Incompleto'.");
             if (seguro) {
                 const userRef = doc(db, "participantes", usuarioDNI);
                 const userSnap = await getDoc(userRef);
@@ -498,7 +630,7 @@
         });
 
         document.getElementById('btnReiniciarCurso').addEventListener('click', async () => {
-            const seguro = confirm("🔄 ¿Deseas reiniciar esta capacitación por completo?");
+            const seguro = await customConfirm("🔄 ¿Deseas reiniciar esta capacitación por completo?");
             if (seguro) {
                 await ejecutarReintentoAccion(cursoActualTitulo);
             }
@@ -548,7 +680,7 @@
 
             container.innerHTML = "";
             if(listaModulosLectura.length === 0) {
-                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ No hay capacitaciones dadas de alta o activas.</p>`;
+                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ Últimas capacitaciones dadas de alta no disponibles.</p>`;
                 return;
             }
 
@@ -556,8 +688,11 @@
                 const div = document.createElement('div');
                 let categoriesDestino = Array.isArray(curso.categoriaAsignada) ? curso.categoriaAsignada : [curso.categoriaAsignada];
                 
-                // Si la categoría asignada está vacía, o incluye "Todos" o el cargo exacto del usuario, tiene acceso.
-                const tieneAccAccess = categoriesDestino.length === 0 || categoriesDestino.includes("Todas") || categoriesDestino.includes(usuarioCategoria);
+                const tieneAccAccess = categoriesDestino.length === 0 || 
+                                       categoriesDestino.includes("Ninguna") || 
+                                       categoriesDestino.includes("Todas") || 
+                                       categoriesDestino.includes(usuarioCategoria);
+                                       
                 const estadoCurso = cursosHechos[curso.titulo] || "Sin cursar";
 
                 if (!tieneAccAccess) {
@@ -572,7 +707,7 @@
                     div.innerHTML = `
                         <div>📄 <strong>${curso.titulo}</strong></div>
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <span class="${badgeClass}">🎉 Realizado: ${estadoCurso}</span>
+                            <span class="${badgeClass}">🎉 Estado: ${estadoCurso}</span>
                             <button class="btn-grilla-reintentar" data-reintentar-titulo="${curso.titulo}"><i class="fa-solid fa-arrow-rotate-left"></i> Reintentar</button>
                         </div>`;
                 } else {
@@ -592,7 +727,8 @@
             document.querySelectorAll('.btn-grilla-reintentar').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const tit = e.currentTarget.getAttribute('data-reintentar-titulo');
-                    if(confirm(`🔄 ¿Deseas volver a intentar la capacitación "${tit}"?`)) {
+                    const seguro = await customConfirm(`🔄 ¿Deseas volver a intentar la capacitación "${tit}"?`);
+                    if(seguro) {
                         await ejecutarReintentoAccion(tit);
                     }
                 });
@@ -685,7 +821,7 @@
             const item = modulosDelCurso[pasoActual];
             if (item && item.tipo === 'trivia') {
                 const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
-                if (!seleccionada) return alert("⚠️ Por favor, selecciona una opción.");
+                if (!seleccionada) return customAlert("⚠️ Por favor, selecciona una opción antes de avanzar.");
                 if (seleccionada.value === opcionCorrectaActualVal) { respuestasCorrectasTotales++; }
             }
 
@@ -703,7 +839,7 @@
                     historialCursos: historialExistente
                 }, { merge: true });
 
-                alert(`💾 Resultado registrado: ${glosaResultado}`);
+                await customAlert(`💾 Resultado registrado con éxito:\n\n${glosaResultado}`);
                 document.getElementById('appSection').style.display = 'none';
                 document.getElementById('menuSection').style.display = 'block';
                 await cargarMenuCapacitaciones(); 
