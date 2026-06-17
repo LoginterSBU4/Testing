@@ -26,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* 📋 EFECTOS DE TRANSICIÓN GENERAL */
         .fade-in {
             animation: fadeInEase 0.5s ease-in-out forwards;
         }
@@ -36,7 +35,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 🔔 CARTEL DE BIENVENIDA FLOTANTE */
         .welcome-banner {
             position: fixed;
             top: 25px;
@@ -123,7 +121,6 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
-        /* 🚪 ESTILOS MICRO LANDING */
         .landing-card {
             text-align: center;
             max-width: 550px;
@@ -189,6 +186,27 @@
             border-color: var(--rojo-loginter);
         }
 
+        .btn-reintentar {
+            background-color: transparent;
+            color: #D97706;
+            border: 1px solid #F59E0B;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+        .btn-reintentar:hover {
+            background-color: #FEF3C7;
+            color: #B45309;
+        }
+
         input[type="number"] {
             width: 100%;
             padding: 12px;
@@ -219,13 +237,13 @@
 
         .badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
         .badge.hecho { background: #D4EDDA; color: #155724; }
+        .badge.proceso { background: #FEF3C7; color: #92400E; }
         .badge.bloqueado-txt { background: #E2E8F0; color: #64748B; font-size: 12px; }
         .badge.categoria-user { background: #E2E8F0; color: var(--gris-oscuro); margin-left: 0; }
         
         .btn-play { background: var(--gris-oscuro); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: 600; }
         .btn-play:hover { background: var(--rojo-loginter); }
 
-        /* 📋 DISEÑO NEUTRAL PARA LAS PREGUNTAS */
         .opcion-label {
             display: flex;
             align-items: center;
@@ -308,7 +326,6 @@
 </head>
 <body>
 
-    <!-- 🔔 CARTEL DE BIENVENIDA ANIMADO (ESTADO INICIAL OCULTO) -->
     <div id="welcomeBanner" class="welcome-banner">
         <span class="welcome-emoji">👋</span>
         <div>
@@ -319,11 +336,9 @@
 
     <header>
         <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
-        <!-- PANEL DE USUARIO LOGUEADO -->
         <div id="userInfo" class="user-panel"></div>
     </header>
 
-    <!-- 🚪 PANTALLA 1: MICRO LANDING DE BIENVENIDA (LOGIN) -->
     <div id="loginSection" class="container landing-card fade-in">
         <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.2</span>
         
@@ -333,22 +348,17 @@
             Tu portal centralizado de entrenamiento operativo y desarrollo profesional continuo.
         </p>
 
-        <!-- CAJA DE LOGEO -->
         <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
             <label style="font-weight: 600; font-size: 14px; color: var(--gris-oscuro);">🪪 Ingresá tu número de DNI para comenzar:</label>
             <input type="number" id="dniInput" placeholder="Ej: 35123456 (sin puntos ni espacios)">
             <button class="btn-loginter" id="btnIngresar">Ingresar a la Academia 🚀</button>
         </div>
 
-        <!-- 💡 MENSAJE CÁLIDO SOBRE GESTIÓN DEL CONOCIMIENTO -->
         <div class="mensaje-calido">
-            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
-            En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
-            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible. ¡Gracias por formar parte!</em>
+            ...
         </div>
     </div>
 
-    <!-- 🗂️ PANTALLA 2: LISTA DE CURSOS FILTRADOS (MENÚ PRINCIPAL) -->
     <div id="menuSection" class="container fade-in" style="display: none;">
         <h3 style="margin-top: 0; color: var(--gris-oscuro); border-bottom: 2px solid var(--gris-fondo); padding-bottom: 10px;">
             <i class="fa-solid fa-clipboard-list"></i> Grilla General de Capacitaciones
@@ -356,13 +366,15 @@
         <div id="listaCursos"></div>
     </div>
 
-    <!-- 📖 PANTALLA 3: REPRODUCTOR DE CONTENIDOS -->
     <div id="appSection" class="container fade-in" style="display: none;">
-        
-        <!-- BOTÓN PARA ABANDONAR CURSO -->
-        <button id="btnAbandonarCurso" class="btn-abandonar">
-            <i class="fa-solid fa-arrow-left"></i> ❌ Abandonar Curso
-        </button>
+        <div style="display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
+            <button id="btnAbandonarCurso" class="btn-abandonar">
+                <i class="fa-solid fa-arrow-left"></i> ❌ Abandonar Curso
+            </button>
+            <button id="btnReiniciarCurso" class="btn-reintentar">
+                <i class="fa-solid fa-rotate-left"></i> 🔄 Reiniciar Capacitación
+            </button>
+        </div>
 
         <div class="progress-bar-container">
             <div id="progressBar" class="progress-bar"></div>
@@ -398,18 +410,14 @@
         let modulosDelCurso = [];
         let respuestasCorrectasTotales = 0;
         let preguntasEvaluadasCount = 0;
-        
-        // Guardará de forma temporal el valor de la opción correcta para cada paso de evaluación
         let opcionCorrectaActualVal = ""; 
 
-        // ACCIÓN INGRESO (LOG-IN)
         document.getElementById('btnIngresar').addEventListener('click', async () => {
             usuarioDNI = document.getElementById('dniInput').value.trim();
             if(!usuarioDNI) return alert("⚠️ Por favor, ingresa tu DNI para continuar.");
 
             const userRef = doc(db, "participantes", usuarioDNI);
             const userSnap = await getDoc(userRef);
-
             let nombreCompleto = "";
 
             if (userSnap.exists()) {
@@ -428,65 +436,83 @@
                 }, { merge: true });
             }
 
-            // Desplegar cartel flotante de bienvenida con el nombre y apellido si se detecta
             const welcomeBanner = document.getElementById('welcomeBanner');
             const welcomeName = document.getElementById('welcomeName');
             welcomeName.textContent = nombreCompleto ? `¡Bienvenido/a, ${nombreCompleto}!` : `¡Bienvenido/a, Legajo ${usuarioDNI}!`;
             
             welcomeBanner.classList.add('show');
-            setTimeout(() => {
-                welcomeBanner.classList.remove('show');
-            }, 4000);
+            setTimeout(() => { welcomeBanner.classList.remove('show'); }, 4000);
 
-            // Renderizar datos del perfil en cabecera junto al botón de salir
             document.getElementById('userInfo').innerHTML = `
                 <span>👤 DNI: <strong>${usuarioDNI}</strong></span>
                 <span class="badge categoria-user">🏷️ Cargo: ${usuarioCategoria}</span>
                 <button id="btnLogOut" class="btn-logout"><i class="fa-solid fa-door-open"></i> Salir</button>
             `;
             
-            document.getElementById('btnLogOut').addEventListener('click', () => {
-                cerrarSesionCompleta();
-            });
-
+            document.getElementById('btnLogOut').addEventListener('click', () => { cerrarSesionCompleta(); });
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('menuSection').style.display = 'block';
 
             await cargarMenuCapacitaciones();
         });
 
-        // FUNCIÓN CERRAR SESIÓN (LOG-OUT)
         function cerrarSesionCompleta() {
             usuarioDNI = "";
             usuarioCategoria = "Rep";
             document.getElementById('dniInput').value = "";
             document.getElementById('userInfo').innerHTML = "";
-            
             document.getElementById('menuSection').style.display = 'none';
             document.getElementById('appSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
         }
 
-        // FUNCIÓN VOLVER AL MENÚ DESDE UN CURSO ACTIVO
-        document.getElementById('btnAbandonarCurso').addEventListener('click', () => {
-            const seguro = confirm("⚠️ ¿Estás seguro de que deseas salir del curso?\n\nSe perderá el progreso de este intento de lectura y las preguntas respondidas.");
+        document.getElementById('btnAbandonarCurso').addEventListener('click', async () => {
+            const seguro = confirm("⚠️ ¿Estás seguro de que deseas salir?\n\nTu progreso quedará guardado como 'Incompleto'.");
             if (seguro) {
+                const userRef = doc(db, "participantes", usuarioDNI);
+                const userSnap = await getDoc(userRef);
+                let historialExistente = {};
+                if (userSnap.exists()) { historialExistente = userSnap.data().historialCursos || {}; }
+                
+                historialExistente[cursoActualTitulo] = "Incompleto ⚠️";
+                await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
+
                 document.getElementById('appSection').style.display = 'none';
                 document.getElementById('menuSection').style.display = 'block';
-                cargarMenuCapacitaciones();
+                await cargarMenuCapacitaciones();
             }
         });
 
+        document.getElementById('btnReiniciarCurso').addEventListener('click', async () => {
+            const seguro = confirm("🔄 ¿Deseas reiniciar esta capacitación por completo?");
+            if (seguro) {
+                const userRef = doc(db, "participantes", usuarioDNI);
+                const userSnap = await getDoc(userRef);
+                let historialExistente = {};
+                if (userSnap.exists()) { historialExistente = userSnap.data().historialCursos || {}; }
+                
+                historialExistente[cursoActualTitulo] = "Cursando ⏳";
+                await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
+                await iniciarCursoEspecifico(cursoActualTitulo);
+            }
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         async function cargarMenuCapacitaciones() {
             const container = document.getElementById('listaCursos');
-            container.innerHTML = "⏳ Organizando tu grilla corporativa personalizada...";
+            container.innerHTML = "⏳ Organizando tu grilla corporativa...";
 
             const historialRef = doc(db, "participantes", usuarioDNI);
             const historialSnap = await getDoc(historialRef);
             let cursosHechos = {};
-            if(historialSnap.exists()) {
-                cursosHechos = historialSnap.data().historialCursos || {};
-            }
+            if(historialSnap.exists()) { cursosHechos = historialSnap.data().historialCursos || {}; }
 
             const querySnapshot = await getDocs(collection(db, "modulos"));
             let codigosVistos = new Set();
@@ -495,7 +521,6 @@
             querySnapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 if (data.estado === "desactivado") return;
-                
                 if (data.tipo === 'lectura' && !codigosVistos.has(data.titulo)) {
                     codigosVistos.add(data.titulo);
                     listaModulosLectura.push(data);
@@ -504,40 +529,28 @@
 
             container.innerHTML = "";
             if(listaModulosLectura.length === 0) {
-                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ No hay capacitaciones dadas de alta en este momento.</p>`;
+                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ No hay capacitaciones dadas de alta.</p>`;
                 return;
             }
 
             listaModulosLectura.forEach(curso => {
                 const div = document.createElement('div');
-                
-                let categoriesDestino = [];
-                if (Array.isArray(curso.categoriaAsignada)) {
-                    categoriesDestino = curso.categoriaAsignada;
-                } else if (curso.categoriaAsignada) {
-                    categoriesDestino = [curso.categoriaAsignada];
-                }
+                let categoriesDestino = Array.isArray(curso.categoriaAsignada) ? curso.categoriaAsignada : [curso.categoriaAsignada];
+                const tieneAccAccess = categoriesDestino.includes(usuarioCategoria);
+                const estadoCurso = cursosHechos[curso.titulo] || "Sin cursar";
 
-                const tieneAcceso = categoriesDestino.includes(usuarioCategoria);
-
-                if (!tieneAcceso) {
+                if (!tieneAccAccess) {
                     div.className = "item-curso bloqueado";
-                    div.innerHTML = `
-                        <div>📄 <strong>${curso.titulo}</strong></div>
-                        <span class="badge bloqueado-txt"><i class="fa-solid fa-lock"></i> No disponible para su perfil</span>
-                    `;
-                } else if (cursosHechos[curso.titulo]) {
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><span class="badge bloqueado-txt"><i class="fa-solid fa-lock"></i> No disponible para su perfil</span>`;
+                } else if (estadoCurso === "Cursando ⏳" || estadoCurso === "Incompleto ⚠️") {
                     div.className = "item-curso";
-                    div.innerHTML = `
-                        <div>📄 <strong>${curso.titulo}</strong></div>
-                        <span class="badge hecho">🎉 Realizado: ${cursosHechos[curso.titulo]}</span>
-                    `;
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><div style="display:flex; align-items:center; gap:10px;"><span class="badge proceso"><i class="fa-solid fa-circle-exclamation"></i> Iniciada, sin completar ⏳</span><button class="btn-play" data-titulo="${curso.titulo}" style="background:#D97706;"><i class="fa-solid fa-play"></i> Continuar</button></div>`;
+                } else if (estadoCurso.includes("Aprobado") || estadoCurso.includes("Desaprobado")) {
+                    div.className = "item-curso";
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><span class="badge hecho">🎉 Realizado: ${estadoCurso}</span>`;
                 } else {
                     div.className = "item-curso";
-                    div.innerHTML = `
-                        <div>📄 <strong>${curso.titulo}</strong></div>
-                        <button class="btn-play" data-titulo="${curso.titulo}"><i class="fa-solid fa-play"></i> Iniciar Test</button>
-                    `;
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><button class="btn-play" data-titulo="${curso.titulo}"><i class="fa-solid fa-play"></i> Iniciar Test</button>`;
                 }
                 container.appendChild(div);
             });
@@ -555,26 +568,39 @@
             document.getElementById('appSection').style.display = 'block';
 
             const querySnapshot = await getDocs(collection(db, "modulos"));
-            modulosDelCurso = [];
+            let lecturas = [];
+            let trivias = [];
             preguntasEvaluadasCount = 0;
             pasoActual = 0;
             respuestasCorrectasTotales = 0;
 
             let ordenBase = 0;
             querySnapshot.forEach(d => {
-                if(d.data().titulo === tituloCurso && d.data().tipo === 'lectura') {
-                    ordenBase = Math.floor(d.data().orden);
-                }
+                if(d.data().titulo === tituloCurso && d.data().tipo === 'lectura') { ordenBase = Math.floor(d.data().orden); }
             });
 
             querySnapshot.forEach(d => {
                 const data = d.data();
                 if(Math.floor(data.orden) === ordenBase && data.estado !== "desactivado") {
-                    modulosDelCurso.push({ id: d.id, ...data });
-                    if(data.tipo === 'trivia') preguntasEvaluadasCount++;
+                    const item = { id: d.id, ...data };
+                    if (data.tipo === 'lectura') { lecturas.push(item); } 
+                    else if (data.tipo === 'trivia') { trivias.push(item); }
                 }
             });
 
+            const userRef = doc(db, "participantes", usuarioDNI);
+            const userSnap = await getDoc(userRef);
+            let historialExistente = userSnap.exists() ? (userSnap.data().historialCursos || {}) : {};
+            
+            if (!historialExistente[tituloCurso] || (!historialExistente[tituloCurso].includes("Aprobado") && !historialExistente[tituloCurso].includes("Desaprobado"))) {
+                historialExistente[tituloCurso] = "Cursando ⏳";
+                await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
+            }
+
+            const bancoPreguntasSorteado = shuffleArray(trivias).slice(0, 2);
+            preguntasEvaluadasCount = bancoPreguntasSorteado.length;
+
+            modulosDelCurso = [...lecturas, ...bancoPreguntasSorteado];
             modulosDelCurso.sort((a, b) => a.orden - b.orden);
             totalPasos = modulosDelCurso.length;
             renderizarPaso();
@@ -588,29 +614,16 @@
             div.className = "step-content active";
 
             if (item.tipo === 'trivia') {
-                // 🎲 MEZCLAR ALEATORIAMENTE LAS OPCIONES PARA EVITAR PATRONES DE RESPUESTA
                 const esCorrectaPrimero = Math.random() < 0.5;
                 const opcA = esCorrectaPrimero ? item.opcionCorrecta : item.opcionIncorrecta;
                 const opcB = esCorrectaPrimero ? item.opcionIncorrecta : item.opcionCorrecta;
-                
-                // Guardar cuál es el identificador de valor de la correcta
                 opcionCorrectaActualVal = esCorrectaPrimero ? "A" : "B";
 
                 div.innerHTML = `
-                    <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación del Módulo</h3>
+                    <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación</h3>
                     <p style="font-size:17px; font-weight:600; margin-bottom: 20px;">❓ ${item.pregunta}</p>
-                    
-                    <label class="opcion-label">
-                        <input type="radio" name="triviaOpc" value="A">
-                        <span class="opcion-marker">A</span>
-                        <span class="opcion-text">${opcA}</span>
-                    </label>
-                    
-                    <label class="opcion-label">
-                        <input type="radio" name="triviaOpc" value="B">
-                        <span class="opcion-marker">B</span>
-                        <span class="opcion-text">${opcB}</span>
-                    </label>
+                    <label class="opcion-label"><input type="radio" name="triviaOpc" value="A"><span class="opcion-marker">A</span><span class="opcion-text">${opcA}</span></label>
+                    <label class="opcion-label"><input type="radio" name="triviaOpc" value="B"><span class="opcion-marker">B</span><span class="opcion-text">${opcB}</span></label>
                 `;
             } else {
                 div.innerHTML = `
@@ -623,7 +636,7 @@
             document.getElementById('btnAtras').disabled = pasoActual === 0;
             const porcentaje = totalPasos > 1 ? (pasoActual / (totalPasos - 1)) * 100 : 100;
             document.getElementById('progressBar').style.width = `${porcentaje}%`;
-            document.getElementById('btnSiguiente').textContent = (pasoActual === totalPasos - 1) ? "🏁 Finalizar Evaluación" : "Siguiente Módulo ➡️";
+            document.getElementById('btnSiguiente').textContent = (pasoActual === totalPasos - 1) ? "🏁 Finalizar" : "Siguiente Módulo ➡️";
         }
 
         document.getElementById('btnAtras').addEventListener('click', () => {
@@ -634,12 +647,8 @@
             const item = modulosDelCurso[pasoActual];
             if (item.tipo === 'trivia') {
                 const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
-                if (!seleccionada) return alert("⚠️ Por favor, selecciona una opción antes de continuar.");
-                
-                // Validar la opción elegida contra la aleatorización registrada
-                if (seleccionada.value === opcionCorrectaActualVal) {
-                    respuestasCorrectasTotales++;
-                }
+                if (!seleccionada) return alert("⚠️ Por favor, selecciona una opción.");
+                if (seleccionada.value === opcionCorrectaActualVal) { respuestasCorrectasTotales++; }
             }
 
             if (pasoActual === totalPasos - 1) {
@@ -648,22 +657,15 @@
 
                 const userRef = doc(db, "participantes", usuarioDNI);
                 const userSnap = await getDoc(userRef);
-                let historialExistente = {};
-                if(userSnap.exists()) historialExistente = userSnap.data().historialCursos || {};
-                
+                let historialExistente = userSnap.exists() ? (userSnap.data().historialCursos || {}) : {};
                 historialExistente[cursoActualTitulo] = glosaResultado;
 
                 await setDoc(userRef, {
-                    dni: usuarioDNI,
-                    categoria: usuarioCategoria,
-                    fechaInicio: new Date(),
-                    pruebaAprobada: glosaResultado,
                     completado: true,
                     historialCursos: historialExistente
                 }, { merge: true });
 
-                alert(`💾 Resultado registrado con éxito: ${glosaResultado}`);
-                
+                alert(`💾 Resultado registrado: ${glosaResultado}`);
                 document.getElementById('appSection').style.display = 'none';
                 document.getElementById('menuSection').style.display = 'block';
                 await cargarMenuCapacitaciones(); 
