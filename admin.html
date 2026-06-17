@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loginter - Panel Administrativo</title>
-    <!-- Iconos y Tipografía Corporativa -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -17,224 +16,122 @@
             --verde-sheets: #107C41;
         }
 
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: var(--gris-fondo); 
-            margin: 0; 
-            padding: 0; 
-        }
-        
-        header { 
-            background-color: var(--gris-oscuro); 
-            color: white; 
-            padding: 15px 30px; 
-            border-bottom: 4px solid var(--rojo-loginter); 
-        }
-        
-        .admin-container { 
-            max-width: 1350px; 
-            margin: 30px auto; 
-            padding: 20px; 
-        }
-        
-        .grid { 
-            display: grid; 
-            grid-template-columns: 1.1fr 1.9fr; 
-            gap: 30px; 
-        }
-        
-        .card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
-            margin-bottom: 25px; 
-        }
-        
-        h3 { 
-            border-bottom: 2px solid var(--gris-fondo); 
-            padding-bottom: 12px; 
-            margin-top: 0; 
-            color: var(--gris-oscuro); 
-        }
-        
-        input, textarea, select { 
-            width: 100%; 
-            padding: 10px; 
-            margin: 6px 0 14px 0; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            font-family: inherit; 
-        }
-        
-        select[multiple] { 
-            height: 95px; 
-            background: #F8FAFC; 
-        }
-        
-        .hint-text { 
-            font-size: 11px; 
-            color: #64748B; 
-            margin-top: -10px; 
-            margin-bottom: 12px; 
-            display: block; 
-        }
-        
-        .seccion-pregunta { 
-            background: #F8FAFC; 
-            padding: 15px; 
-            border-left: 4px solid var(--rojo-loginter); 
-            border-radius: 4px; 
-            margin-bottom: 15px; 
-        }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-        }
-        
-        th, td { 
-            padding: 10px; 
-            text-align: left; 
-            border-bottom: 1px solid #E2E8F0; 
-            font-size: 13px; 
-        }
-        
-        th { 
-            background-color: var(--gris-oscuro); 
-            color: white; 
-        }
-        
-        .btn-submit { 
-            background: var(--rojo-loginter); 
-            color: white; 
-            border: none; 
-            padding: 14px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            width: 100%; 
-            font-size: 15px; 
-        }
-        
-        .btn-submit:hover { 
-            background-color: #EF233C; 
-        }
-        
-        .select-acciones { 
-            padding: 4px; 
-            font-size: 12px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            width: auto; 
-            margin:0;
-        }
-        
-        .badge { 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 11px; 
-            font-weight: bold; 
-        }
-        
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
+        header { background-color: var(--gris-oscuro); color: white; padding: 15px 30px; border-bottom: 4px solid var(--rojo-loginter); }
+        .admin-container { max-width: 1350px; margin: 30px auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 30px; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; }
+        h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
+        input, textarea, select { width: 100%; padding: 10px; margin: 6px 0 14px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        select[multiple] { height: 125px; background: #F8FAFC; }
+        .hint-text { font-size: 11px; color: #64748B; margin-top: -10px; margin-bottom: 12px; display: block; }
+        .seccion-pregunta { background: #F8FAFC; padding: 15px; border-left: 4px solid var(--rojo-loginter); border-radius: 4px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
+        th { background-color: var(--gris-oscuro); color: white; }
+        .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
+        .btn-submit:hover { background-color: #EF233C; }
+        .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge.success { background: #D4EDDA; color: #155724; }
-        .badge.warning { background: #FFF3CD; color: #856404; }
+        .badge.warning { background: #FEF3C7; color: #92400E; }
         .badge.danger { background: #F8D7DA; color: #721C24; }
         .badge.info { background: #CCE5FF; color: #004085; }
-        
-        .btn-control { 
-            padding: 4px 8px; 
-            font-size: 12px; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            border: 1px solid #ccc; 
-            background: #fff; 
-            margin-right: 2px; 
-        }
+        .btn-control { padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; margin-right: 2px; }
+        .banco-preguntas-scroll { max-height: 400px; overflow-y: auto; border: 1px solid #CBD5E1; padding: 10px; border-radius: 6px; background: #F1F5F9; }
     </style>
 </head>
 <body>
 
     <header>
-        <h2><i class="fa-solid fa-sliders"></i> Panel de administración de capacitaciones SBU4 🛠️</h2>
+        <h2><i class="fa-solid fa-sliders"></i> Panel de Administración SBU4 🛠️</h2>
     </header>
 
     <div class="admin-container">
         <div class="grid">
-            
-            <!-- COLUMNA IZQUIERDA: CREACIÓN DE CAPACITACIONES -->
             <div class="card">
-                <h3><i class="fa-solid fa-folder-plus"></i> Publicar Nueva Capacitación</h3>
+                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación</h3>
                 <form id="formMultiPregunta">
-                    <label><strong>Título de la Capacitación 🎯</strong></label>
-                    <input type="text" id="tituloModulo" placeholder="Ej: Operaciones Seguras de Autoelevadores" required>
+                    <label><strong>Título 🎯</strong></label>
+                    <input type="text" id="tituloModulo" required>
                     
-                    <label><strong>Categorías de Destino (Multi-opción) 👥</strong></label>
+                    <label><strong>Categorías Destino 👥</strong></label>
                     <select id="categoriaCurso" multiple required>
+                        <option value="Todas">🌍 Todas (Toda la nómina)</option>
                         <option value="Rep">Rep</option>
                         <option value="PS">PS</option>
                         <option value="Team Leader">Team Leader</option>
                         <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
+                        <option value="Ninguna">🔒 Ninguna (Desactivado)</option>
                     </select>
-                    <span class="hint-text"><i class="fa-solid fa-info-circle"></i> Mantén presionado Ctrl (Windows) o Cmd (Mac) para elegir varias categorías.</span>
+                    <span class="hint-text">Usa Ctrl o Cmd para seleccionar varias.</span>
 
-                    <label><strong>Orden de Módulo (Número entero) 🔢</strong></label>
-                    <input type="number" id="ordenModulo" placeholder="Ej: 1" required>
+                    <label><strong>Orden 🔢</strong></label>
+                    <input type="number" id="ordenModulo" required>
 
-                    <label><strong>Texto Instructivo / Contenido de Lectura 📝</strong></label>
-                    <textarea id="contenidoModulo" rows="7" placeholder="Escribe o pega aquí el material de estudio para el operario..." required></textarea>
+                    <label><strong>Contenido de Lectura 📝</strong></label>
+                    <textarea id="contenidoModulo" rows="6" required></textarea>
 
-                    <h4 style="color:var(--rojo-loginter); margin-bottom:15px;"><i class="fa-solid fa-list-ol"></i> Cuestionario de Evaluación</h4>
-
-                    <div class="seccion-pregunta">
-                        <strong>Pregunta 1 🤔</strong>
-                        <input type="text" id="p1_preg" placeholder="Escribe la primera pregunta" required>
-                        <input type="text" id="p1_corr" placeholder="Respuesta Correcta 🟢" required>
-                        <input type="text" id="p1_inc" placeholder="Respuesta Incorrecta (Distractor) 🔵" required>
+                    <h4><i class="fa-solid fa-list-ol"></i> Cuestionarios (Hasta 10 preguntas)</h4>
+                    <div class="banco-preguntas-scroll">
+                        <div class="seccion-pregunta">
+                            <strong>Pregunta 1 (Obligatoria)</strong>
+                            <input type="text" id="p1_preg" required placeholder="Pregunta"><input type="text" id="p1_corr" required placeholder="Correcta"><input type="text" id="p1_inc" required placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta">
+                            <strong>Pregunta 2 (Obligatoria)</strong>
+                            <input type="text" id="p2_preg" required placeholder="Pregunta"><input type="text" id="p2_corr" required placeholder="Correcta"><input type="text" id="p2_inc" required placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 3 (Opcional)</strong>
+                            <input type="text" id="p3_preg" placeholder="Pregunta 3"><input type="text" id="p3_corr" placeholder="Correcta"><input type="text" id="p3_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 4 (Opcional)</strong>
+                            <input type="text" id="p4_preg" placeholder="Pregunta 4"><input type="text" id="p4_corr" placeholder="Correcta"><input type="text" id="p4_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 5 (Opcional)</strong>
+                            <input type="text" id="p5_preg" placeholder="Pregunta 5"><input type="text" id="p5_corr" placeholder="Correcta"><input type="text" id="p5_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 6 (Opcional)</strong>
+                            <input type="text" id="p6_preg" placeholder="Pregunta 6"><input type="text" id="p6_corr" placeholder="Correcta"><input type="text" id="p6_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 7 (Opcional)</strong>
+                            <input type="text" id="p7_preg" placeholder="Pregunta 7"><input type="text" id="p7_corr" placeholder="Correcta"><input type="text" id="p7_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 8 (Opcional)</strong>
+                            <input type="text" id="p8_preg" placeholder="Pregunta 8"><input type="text" id="p8_corr" placeholder="Correcta"><input type="text" id="p8_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 9 (Opcional)</strong>
+                            <input type="text" id="p9_preg" placeholder="Pregunta 9"><input type="text" id="p9_corr" placeholder="Correcta"><input type="text" id="p9_inc" placeholder="Incorrecta">
+                        </div>
+                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
+                            <strong>Pregunta 10 (Opcional)</strong>
+                            <input type="text" id="p10_preg" placeholder="Pregunta 10"><input type="text" id="p10_corr" placeholder="Correcta"><input type="text" id="p10_inc" placeholder="Incorrecta">
+                        </div>
                     </div>
-
-                    <div class="seccion-pregunta">
-                        <strong>Pregunta 2 🤔</strong>
-                        <input type="text" id="p2_preg" placeholder="Escribe la segunda pregunta" required>
-                        <input type="text" id="p2_corr" placeholder="Respuesta Correcta 🟢" required>
-                        <input type="text" id="p2_inc" placeholder="Respuesta Incorrecta (Distractor) 🔵" required>
-                    </div>
-
-                    <button type="submit" class="btn-submit">Publicar Capacitación Completa 🚀</button>
+                    <button type="submit" class="btn-submit" style="margin-top:15px;">Publicar Capacitación 🚀</button>
                 </form>
             </div>
 
-            <!-- COLUMNA DERECHA: CONEXIÓN GOOGLE SHEETS Y PARTICIPANTES -->
             <div>
                 <div class="card" style="border-left: 4px solid var(--verde-sheets);">
-                    <h3><i class="fa-solid fa-file-excel"></i> Control de Legajos e Identificación (Sheets)</h3>
-                    <p style="font-size: 13px; color: #475569; margin-top: 0; line-height: 1.5;">
-                        Pega el enlace de tu planilla de Google Sheets. Asegúrate de que el documento esté configurado para compartir como <strong>"Cualquier persona con el enlace puede ver"</strong>. El archivo debe contener las columnas: <strong>NOMBRE, APELLIDO, DNI, CARGO</strong>.
-                    </p>
-                    
-                    <label><strong>Enlace del Maestro de Personal (Google Sheets) 🔗</strong></label>
-                    <input type="text" id="sheetsUrlInput" placeholder="https://docs.google.com/spreadsheets/d/..." style="margin-bottom: 15px;">
-
-                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--verde-sheets);">
-                        <i class="fa-solid fa-arrows-rotate"></i> Sincronizar y Actualizar Personal
-                    </button>
+                    <h3><i class="fa-solid fa-file-excel"></i> Sincronización Google Sheets</h3>
+                    <input type="text" id="sheetsUrlInput" placeholder="Enlace del Google Sheets...">
+                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--verde-sheets);">Sincronizar Personal</button>
                 </div>
 
-                <!-- SEGUIMIENTO DE OPERARIOS -->
                 <div class="card">
-                    <h3><i class="fa-solid fa-chart-line"></i> Gestión y Seguimiento de Capacitados</h3>
-                    <div style="overflow-x:auto; max-height: 250px;">
+                    <h3><i class="fa-solid fa-chart-line"></i> Control de Legajos</h3>
+                    <div style="overflow-x:auto; max-height: 380px;">
                         <table>
                             <thead>
-                                <tr>
-                                    <th>DNI</th>
-                                    <th>Categoría</th>
-                                    <th>Estado</th>
-                                    <th>Último Examen</th>
-                                    <th>Acciones</th>
-                                </tr>
+                                <tr><th>DNI / Datos</th><th>Cargo</th><th>Estado General</th><th>Historial</th><th>Acciones</th></tr>
                             </thead>
                             <tbody id="tablaParticipantes"></tbody>
                         </table>
@@ -243,20 +140,12 @@
             </div>
         </div>
 
-        <!-- SECCIÓN INFERIOR: GESTOR DE CONTENIDOS COMPLETO -->
-        <div class="card" style="margin-top: 20px;">
-            <h3><i class="fa-solid fa-layer-group"></i> Panel Gestor de Contenidos y Módulos de Evaluación</h3>
+        <div class="card">
+            <h3><i class="fa-solid fa-layer-group"></i> Gestor de Módulos</h3>
             <div style="overflow-x:auto;">
                 <table>
                     <thead>
-                        <tr>
-                            <th>Orden</th>
-                            <th>Tipo</th>
-                            <th>Identificador / Pregunta</th>
-                            <th>Categorías Requeridas</th>
-                            <th>Estado Actual</th>
-                            <th>Controles de Ajuste</th>
-                        </tr>
+                        <tr><th>Orden</th><th>Tipo</th><th>Identificador</th><th>Categorías</th><th>Estado</th><th>Controles</th></tr>
                     </thead>
                     <tbody id="tablaModulos"></tbody>
                 </table>
@@ -268,7 +157,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Configuración real y autenticada de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",
             authDomain: "bot-de-capacitacion-sbu4.firebaseapp.com",
@@ -281,131 +169,77 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        document.getElementById('categoriaCurso').addEventListener('change', (e) => {
+            const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
+            if (selectedOptions.includes('Todas')) {
+                Array.from(e.target.options).forEach(opt => {
+                    if (opt.value !== 'Ninguna') opt.selected = true;
+                });
+            } else if (selectedOptions.includes('Ninguna')) {
+                Array.from(e.target.options).forEach(opt => { opt.selected = (opt.value === 'Ninguna'); });
+            }
+        });
+
         function getSelectedCategories(selectElement) {
-            return Array.from(selectElement.selectedOptions).map(opt => opt.value);
+            let selected = Array.from(selectElement.selectedOptions).map(opt => opt.value);
+            if (selected.includes('Todas')) return ["Rep", "PS", "Team Leader", "Jefe/Responsable/Gerente"];
+            if (selected.includes('Ninguna')) return [];
+            return selected;
         }
 
-        // Extrae el ID único del Spreadsheet a partir de la URL
         function extractSpreadsheetId(url) {
             const matches = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
             return matches ? matches[1] : null;
         }
 
-        // Función robusta para parsear texto CSV de Google Sheets
         function parseCSV(text) {
-            const lines = [];
-            let row = [""];
-            lines.push(row);
-            let inQuotes = false;
-
+            const lines = []; let row = [""]; lines.push(row); let inQuotes = false;
             for (let i = 0; i < text.length; i++) {
-                let c = text[i];
-                let next = text[i+1];
-                if (c === '"') {
-                    if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
-                    else { inQuotes = !inQuotes; }
-                } else if (c === ',' && !inQuotes) {
-                    row.push('');
-                } else if ((c === '\r' || c === '\n') && !inQuotes) {
-                    if (c === '\r' && next === '\n') { i++; }
-                    row = [''];
-                    lines.push(row);
-                } else {
-                    row[row.length - 1] += c;
-                }
+                let c = text[i]; let next = text[i+1];
+                if (c === '"') { if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; } else { inQuotes = !inQuotes; } } 
+                else if (c === ',' && !inQuotes) { row.push(''); } 
+                else if ((c === '\r' || c === '\n') && !inQuotes) { if (c === '\r' && next === '\n') { i++; } row = ['']; lines.push(row); } 
+                else { row[row.length - 1] += c; }
             }
             return lines.filter(r => r.length > 1 || (r[0] && r[0].trim() !== ""));
         }
 
-        // Sincronización Real con Google Sheets
         document.getElementById('btnSincronizar').addEventListener('click', async () => {
             const urlInput = document.getElementById('sheetsUrlInput').value.trim();
-            if (!urlInput) {
-                return alert("⚠️ Por favor, pega primero el enlace de Google Sheets.");
-            }
-
             const spreadsheetId = extractSpreadsheetId(urlInput);
-            if (!spreadsheetId) {
-                return alert("⚠️ El enlace ingresado no parece ser un link válido de Google Sheets. Asegúrate de copiar el enlace de la barra de direcciones del navegador.");
-            }
-
-            const btn = document.getElementById('btnSincronizar');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Conectando y Sincronizando...`;
-            btn.disabled = true;
+            if (!spreadsheetId) return alert("⚠️ Enlace no válido.");
 
             try {
-                // Endpoint para descargar el CSV público del Google Sheet
                 const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv`;
                 const response = await fetch(csvUrl);
-                
-                if (!response.ok) {
-                    throw new Error("No se pudo descargar el archivo. Verifica que esté compartido públicamente como 'Cualquier persona con el enlace puede ver'.");
-                }
-
                 const csvText = await response.text();
                 const rows = parseCSV(csvText);
 
-                if (rows.length < 2) {
-                    throw new Error("El archivo está vacío o no contiene suficientes filas.");
-                }
-
-                // Identificar cabeceras de columnas
                 const headers = rows[0].map(h => h.trim().toUpperCase());
                 const indexDni = headers.indexOf("DNI");
+                const indexCargo = headers.indexOf("CARGO");
                 const indexNombre = headers.indexOf("NOMBRE");
                 const indexApellido = headers.indexOf("APELLIDO");
-                const indexCargo = headers.indexOf("CARGO");
 
-                if (indexDni === -1 || indexCargo === -1) {
-                    throw new Error("No se encontraron las columnas esenciales 'DNI' y 'CARGO'. Asegúrate de que las cabeceras estén escritas exactamente igual en la primera fila.");
-                }
-
-                let insertadosCount = 0;
-                let promesasCarga = [];
-
-                // Recorrer filas de datos (omitiendo la cabecera)
+                let promesas = [];
                 for (let i = 1; i < rows.length; i++) {
                     const columns = rows[i];
-                    if (columns.length < Math.max(indexDni, indexCargo) + 1) continue;
-
-                    const dniVal = columns[indexDni].trim().replace(/\D/g, ''); // Limpiar puntos, guiones o espacios
-                    const cargoVal = columns[indexCargo].trim();
-                    const nombreVal = indexNombre !== -1 ? columns[indexNombre].trim() : "";
-                    const apellidoVal = indexApellido !== -1 ? columns[indexApellido].trim() : "";
-
-                    if (!dniVal || !cargoVal) continue;
-
-                    // Subir o fusionar datos en Firestore
+                    if (!columns[indexDni] || !columns[indexCargo]) continue;
+                    const dniVal = columns[indexDni].trim().replace(/\D/g, '');
                     const userRef = doc(db, "participantes", dniVal);
-                    promesasCarga.push(setDoc(userRef, {
+                    promesas.push(setDoc(userRef, {
                         dni: dniVal,
-                        nombre: nombreVal,
-                        apellido: apellidoVal,
-                        categoria: cargoVal
+                        nombre: columns[indexNombre] ? columns[indexNombre].trim() : "",
+                        apellido: columns[indexApellido] ? columns[indexApellido].trim() : "",
+                        categoria: columns[indexCargo].trim()
                     }, { merge: true }));
-
-                    insertadosCount++;
                 }
-
-                // Guardar la URL en la configuración de la base de datos para persistencia del Admin
-                const configRef = doc(db, "configuracion", "general");
-                promesasCarga.push(setDoc(configRef, { sheetsUrl: urlInput }, { merge: true }));
-
-                await Promise.all(promesasCarga);
-
-                alert(`🔄 ¡Sincronización Completada!\nSe procesaron y cargaron ${insertadosCount} legajos de personal con sus respectivos cargos.`);
+                await Promise.all(promesas);
+                alert("¡Sincronización Exitosa!");
                 location.reload();
-
-            } catch (error) {
-                console.error("Error de sincronización:", error);
-                alert(`❌ Error al sincronizar con Google Sheets.\n\nDetalle: ${error.message}`);
-            } finally {
-                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Sincronizar y Actualizar Personal`;
-                btn.disabled = false;
-            }
+            } catch (err) { alert("Error: " + err.message); }
         });
 
-        // Publicar nueva capacitación
         document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
             e.preventDefault();
             const titulo = document.getElementById('tituloModulo').value;
@@ -415,61 +249,53 @@
 
             try {
                 await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
-                await addDoc(collection(db, "modulos"), {
-                    orden: orden + 0.2,
-                    categoriaAsignada: categoriasSeleccionadas,
-                    pregunta: document.getElementById('p1_preg').value,
-                    opcionCorrecta: document.getElementById('p1_corr').value,
-                    opcionIncorrecta: document.getElementById('p1_inc').value,
-                    tipo: 'trivia', estado: 'activo'
-                });
-                await addDoc(collection(db, "modulos"), {
-                    orden: orden + 0.4,
-                    categoriaAsignada: categoriasSeleccionadas,
-                    pregunta: document.getElementById('p2_preg').value,
-                    opcionCorrecta: document.getElementById('p2_corr').value,
-                    opcionIncorrecta: document.getElementById('p2_inc').value,
-                    tipo: 'trivia', estado: 'activo'
-                });
-
-                alert("¡Capacitación completa cargada y publicada con éxito!");
+                let promesas = [];
+                for (let i = 1; i <= 10; i++) {
+                    const preg = document.getElementById(`p${i}_preg`).value.trim();
+                    const corr = document.getElementById(`p${i}_corr`).value.trim();
+                    const inc = document.getElementById(`p${i}_inc`).value.trim();
+                    if (preg !== "") {
+                        promesas.push(addDoc(collection(db, "modulos"), {
+                            orden: orden + (0.01 * i),
+                            categoriaAsignada: categoriasSeleccionadas,
+                            pregunta: preg, opcionCorrecta: corr, opcionIncorrecta: inc,
+                            tipo: 'trivia', estado: 'activo'
+                        }));
+                    }
+                }
+                await Promise.all(promesas);
+                alert("¡Guardado correctamente!");
                 location.reload();
-            } catch (err) { console.error(err); }
+            } catch (err) { alert("Error al guardar."); }
         });
 
         async function cargarDatosAdmin() {
-            // Cargar link guardado de Sheets si existe
-            try {
-                const configSnap = await getDoc(doc(db, "configuracion", "general"));
-                if (configSnap.exists() && configSnap.data().sheetsUrl) {
-                    document.getElementById('sheetsUrlInput').value = configSnap.data().sheetsUrl;
-                }
-            } catch (e) { console.log("Configuración inicial no encontrada."); }
-
             const tbodyPart = document.getElementById('tablaParticipantes');
-            tbodyPart.innerHTML = "";
             const snapPart = await getDocs(collection(db, "participantes"));
+            
             snapPart.forEach(docSnap => {
                 const p = docSnap.data();
                 const tr = document.createElement('tr');
+                let cursosHechos = p.historialCursos || {};
+                let keys = Object.keys(cursosHechos);
+                let estadoBadge = `<span class="badge success">Terminado ✅</span>`;
                 
-                // Mostrar Apellido y Nombre junto al DNI si existen en Firestore
-                let identificacionStr = p.dni;
-                if (p.nombre || p.apellido) {
-                    identificacionStr += ` <br><span style="font-size:11px;color:#64748B;">${p.apellido || ''}, ${p.nombre || ''}</span>`;
-                }
+                if (keys.length === 0) estadoBadge = `<span class="badge danger" style="background:#E2E8F0; color:#64748B;">Sin cursar 📭</span>`;
+                else if (keys.some(k => cursosHechos[k] === "Cursando ⏳")) estadoBadge = `<span class="badge warning">Cursando ⏳</span>`;
+                else if (keys.some(k => cursosHechos[k] === "Incompleto ⚠️")) estadoBadge = `<span class="badge danger">Incompleto ⚠️</span>`;
+
+                let historialStr = keys.length > 0 ? keys.map(k => `• ${k}: ${cursosHechos[k]}`).join('<br>') : 'Sin intentos';
 
                 tr.innerHTML = `
-                    <td><strong>${identificacionStr}</strong></td>
+                    <td><strong>${p.dni}</strong><br><span style='font-size:11px;'>${p.apellido || ''}, ${p.nombre || ''}</span></td>
                     <td><span class="badge info">${p.categoria || 'Rep'}</span></td>
-                    <td>${p.completado ? `<span class="badge success">Terminado</span>` : `<span class="badge warning">Cursando</span>`}</td>
-                    <td><span class="badge">${p.pruebaAprobada || 'Pendiente'}</span></td>
+                    <td>${estadoBadge}</td>
+                    <td style="font-size:11px;">${historialStr}</td>
                     <td>
                         <select class="select-acciones" data-id="${docSnap.id}" data-dni="${p.dni}">
                             <option value="" disabled selected>Acciones...</option>
-                            <option value="ver">👁️ Ver Historial</option>
-                            <option value="cambiar">🔄 Cambiar Rango</option>
-                            <option value="borrar">🗑️ Eliminar</option>
+                            <option value="resetear">🗑️ Resetear (Sin Cursar)</option>
+                            <option value="borrar">❌ Borrar Legajo</option>
                         </select>
                     </td>
                 `;
@@ -478,116 +304,38 @@
 
             document.querySelectorAll('.select-acciones').forEach(sel => {
                 sel.addEventListener('change', async (e) => {
-                    const acc = e.target.value; const id = e.target.getAttribute('data-id'); const dni = e.target.getAttribute('data-dni');
-                    if (acc === 'ver') {
-                        const snap = await getDocs(collection(db, "participantes"));
-                        let textoHistorial = "";
-                        snap.forEach(d => {
-                            if(d.data().dni === dni && d.data().historialCursos) {
-                                Object.keys(d.data().historialCursos).forEach(k => {
-                                    textoHistorial += `<p>• <strong>${k}:</strong> ${d.data().historialCursos[k]}</p>`;
-                                });
-                            }
-                        });
-                        const w = window.open("", "_blank", "width=500,height=400");
-                        w.document.write(`<html><head><style>body{font-family:sans-serif;padding:20px;}</style></head><body><h3>Historial de Cursos - Legajo: ${dni}</h3>${textoHistorial || '<p>Sin registros avanzados.</p>'}</body></html>`);
-                        w.document.close();
-                    } else if (acc === 'cambiar') {
-                        const nuevaCat = prompt("Elige la nueva categoría (Rep, PS, Team Leader, Jefe/Responsable/Gerente):");
-                        if(nuevaCat) {
-                            await updateDoc(doc(db, "participantes", id), { categoria: nuevaCat });
+                    const acc = e.target.value; const id = e.target.getAttribute('data-id');
+                    if (acc === 'resetear') {
+                        if(confirm("¿Restablecer este usuario a 'Sin Cursar'?")) {
+                            await updateDoc(doc(db, "participantes", id), { completado: false, pruebaAprobada: "Pendiente", historialCursos: {} });
                             location.reload();
                         }
                     } else if (acc === 'borrar') {
-                        if(confirm("¿Eliminar registro?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
+                        if(confirm("¿Borrar legajo?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
                     }
-                    e.target.value = "";
                 });
             });
 
             const tbodyMod = document.getElementById('tablaModulos');
-            tbodyMod.innerHTML = "";
             const snapMod = await getDocs(collection(db, "modulos"));
-            let modulosTodos = [];
-            snapMod.forEach(d => modulosTodos.push({id: d.id, ...d.data()}));
-            modulosTodos.sort((a,b) => a.orden - b.orden);
+            let modulos = []; snapMod.forEach(d => modulos.push({id: d.id, ...d.data()}));
+            modulos.sort((a,b) => a.orden - b.orden);
 
-            modulosTodos.forEach(m => {
+            modulos.forEach(m => {
                 const tr = document.createElement('tr');
-                const estadoBadge = m.estado === 'desactivado' ? `<span class="badge danger">Pausado</span>` : `<span class="badge success">Activo</span>`;
-                const labelInfo = m.tipo === 'lectura' ? `<strong>CURSO: ${m.titulo}</strong>` : `Pregunta: ${m.pregunta}`;
-                
-                let stringCategorias = "";
-                if (Array.isArray(m.categoriaAsignada)) {
-                    stringCategorias = m.categoriaAsignada.join(', ');
-                } else {
-                    stringCategorias = m.categoriaAsignada || 'Rep';
-                }
-
+                let cats = Array.isArray(m.categoriaAsignada) ? m.categoriaAsignada.join(', ') : m.categoriaAsignada;
                 tr.innerHTML = `
                     <td>${m.orden}</td>
-                    <td><span class="badge ${m.tipo === 'lectura' ? 'success' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
-                    <td>${labelInfo}</td>
-                    <td><span class="badge info">${stringCategorias}</span></td>
-                    <td>${estadoBadge}</td>
-                    <td>
-                        <button class="btn-control btn-status" data-id="${m.id}" data-status="${m.estado || 'activo'}">👁️ Ver/Pausar</button>
-                        <button class="btn-control btn-edit" data-id="${m.id}" data-tipo="${m.tipo}">✏️ Contenido</button>
-                        <button class="btn-control btn-edit-cat" data-id="${m.id}">🏷️ Editar Cat</button>
-                        <button class="btn-control btn-del-mod" data-id="${m.id}" style="color:red;">🗑️ Borrar</button>
-                    </td>
+                    <td>${m.tipo.toUpperCase()}</td>
+                    <td>${m.tipo === 'lectura' ? m.titulo : m.pregunta}</td>
+                    <td>${cats || 'Ninguna'}</td>
+                    <td>${m.estado || 'activo'}</td>
+                    <td><button class="btn-control text-danger" onclick="alert('Usa los controles nativos para eliminar o editar el nodo id: ${m.id}')">⚙️ Gestionar</button></td>
                 `;
                 tbodyMod.appendChild(tr);
             });
-
-            document.querySelectorAll('.btn-status').forEach(b => {
-                b.addEventListener('click', async (e) => {
-                    const id = e.target.getAttribute('data-id');
-                    const current = e.target.getAttribute('data-status');
-                    await updateDoc(doc(db, "modulos", id), { estado: (current === 'desactivado' ? 'activo' : 'desactivado') });
-                    location.reload();
-                });
-            });
-
-            document.querySelectorAll('.btn-del-mod').forEach(b => {
-                b.addEventListener('click', async (e) => {
-                    if(confirm("¿Eliminar componente de estudio?")) {
-                        await deleteDoc(doc(db, "modulos", e.target.getAttribute('data-id')));
-                        location.reload();
-                    }
-                });
-            });
-
-            document.querySelectorAll('.btn-edit').forEach(b => {
-                b.addEventListener('click', async (e) => {
-                    const id = e.target.getAttribute('data-id');
-                    const tipo = e.target.getAttribute('data-tipo');
-                    const nuevoTexto = prompt("Introduce el nuevo texto:");
-                    if(nuevoTexto) {
-                        if(tipo === 'lectura') {
-                            await updateDoc(doc(db, "modulos", id), { contenido: nuevoTexto });
-                        } else {
-                            await updateDoc(doc(db, "modulos", id), { pregunta: nuevoTexto });
-                        }
-                        location.reload();
-                    }
-                });
-            });
-
-            document.querySelectorAll('.btn-edit-cat').forEach(b => {
-                b.addEventListener('click', async (e) => {
-                    const id = e.target.getAttribute('data-id');
-                    const inputUser = prompt("Asigna las categorías válidas separadas por comas (Ej: Rep, PS, Team Leader):");
-                    if (inputUser !== null) {
-                        const arrayFormat = inputUser.split(',').map(s => s.trim()).filter(s => s.length > 0);
-                        if(arrayFormat.length === 0) return alert("Debes ingresar al menos una categoría.");
-                        await updateDoc(doc(db, "modulos", id), { categoriaAsignada: arrayFormat });
-                        location.reload();
-                    }
-                });
-            });
         }
-        cargarDatosAdmin();
+        window.onload = cargarDatosAdmin;
     </script>
 </body>
 </html>
