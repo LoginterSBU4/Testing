@@ -3,193 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loginter - Panel Administrativo</title>
+    <title>Loginter - Portal de Capacitación</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --rojo-loginter: #D90429;
+            --rojo-hover: #EF233C;
             --gris-oscuro: #2B2D42;
+            --gris-texto: #8D99AE;
             --gris-fondo: #EDF2F4;
             --blanco: #FFFFFF;
-            --verde-sheets: #107C41;
         }
 
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--gris-fondo); margin: 0; padding: 0; }
-        header { background-color: var(--gris-oscuro); color: white; padding: 15px 30px; border-bottom: 4px solid var(--rojo-loginter); }
-        .admin-container { max-width: 1350px; margin: 30px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 30px; }
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; }
-        h3 { border-bottom: 2px solid var(--gris-fondo); padding-bottom: 12px; margin-top: 0; color: var(--gris-oscuro); }
-        input, textarea, select { width: 100%; padding: 10px; margin: 6px 0 14px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
-        select[multiple] { height: 125px; background: #F8FAFC; }
-        .hint-text { font-size: 11px; color: #64748B; margin-top: -10px; margin-bottom: 12px; display: block; }
-        .seccion-pregunta { background: #F8FAFC; padding: 15px; border-left: 4px solid var(--rojo-loginter); border-radius: 4px; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E2E8F0; font-size: 13px; }
-        th { background-color: var(--gris-oscuro); color: white; }
-        .btn-submit { background: var(--rojo-loginter); color: white; border: none; padding: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
-        .btn-submit:hover { background-color: #EF233C; }
-        .select-acciones { padding: 4px; font-size: 12px; font-weight: 600; cursor: pointer; width: auto; margin:0; }
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
-        .badge.success { background: #D4EDDA; color: #155724; }
-        .badge.warning { background: #FEF3C7; color: #92400E; }
-        .badge.danger { background: #F8D7DA; color: #721C24; }
-        .badge.info { background: #CCE5FF; color: #004085; }
-        .btn-control { padding: 6px 10px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid var(--rojo-loginter); background: #fff; color: var(--rojo-loginter); font-weight: bold; }
-        .btn-control:hover { background: var(--rojo-loginter); color: white; }
-        .banco-preguntas-scroll { max-height: 400px; overflow-y: auto; border: 1px solid #CBD5E1; padding: 10px; border-radius: 6px; background: #F1F5F9; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gris-fondo);
+            margin: 0;
+            padding: 0;
+            color: var(--gris-oscuro);
+            overflow-x: hidden;
+        }
 
-        /* Modal Styles */
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:10000; }
-        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 15px 0; }
-        .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
-        .checkbox-item input { width: auto; margin: 0; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        .btn-close-modal { background: #64748B; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .fade-in {
+            animation: fadeInEase 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeInEase {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARTEL DE BIENVENIDA FLOTANTE */
+        .welcome-banner {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: var(--blanco);
+            border-left: 5px solid var(--rojo-loginter);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 15px 25px;
+            border-radius: 6px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .welcome-banner.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .welcome-emoji {
+            font-size: 28px;
+            animation: waveEmoji 1.5s infinite;
+            transform-origin: 70% 70%;
+            display: inline-block;
+        }
+
+        @keyframes waveEmoji {
+            0% { transform: rotate( 0.0deg) }
+            10% { transform: rotate(14.0deg) }
+            20% { transform: rotate(-8.0deg) }
+            30% { transform: rotate(14.0deg) }
+            40% { transform: rotate(-4.0deg) }
+            50% { transform: rotate(10.0deg) }
+            60% { transform: rotate( 0.0deg) }
+            100% { transform: rotate( 0.0deg) }
+        }
+
+        header {
+            background-color: var(--blanco);
+            color: var(--gris-oscuro);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--rojo-loginter);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo-txt { font-weight: 700; margin: 0; }
+        .logo-txt span { color: var(--rojo-loginter); }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-logout {
+            background-color: #E2E8F0;
+            color: #475569;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-logout:hover {
+            background-color: var(--rojo-loginter);
+            color: white;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: var(--blanco);
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .landing-card {
+            text-align: center;
+            max-width: 550px;
+            margin: 60px auto;
+        }
+
+        .alpha-badge {
+            background-color: #FFF3CD;
+            color: #92400E;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid #FDE68A;
+        }
+
+        .mensaje-calido {
+            background-color: #F8FAFC;
+            border-left: 4px solid var(--rojo-loginter);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .btn-loginter {
+            background-color: var(--rojo-loginter);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-loginter:hover { background-color: var(--rojo-hover); }
+
+        .btn-abandonar {
+            background-color: transparent;
+            color: #64748B;
+            border: 1px solid #CBD5E1;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+        .btn-abandonar:hover {
+            background-color: #F1F5F9;
+            color: var(--rojo-loginter);
+            border-color: var(--rojo-loginter);
+        }
+
+        .btn-reintentar {
+            background-color: transparent;
+            color: #D97706;
+            border: 1px solid #F59E0B;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+        .btn-reintentar:hover {
+            background-color: #FEF3C7;
+            color: #B45309;
+        }
+
+        .btn-grilla-reintentar {
+            background-color: #F1F5F9;
+            color: #475569;
+            border: 1px solid #CBD5E1;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-grilla-reintentar:hover {
+            background-color: var(--gris-oscuro);
+            color: white;
+            border-color: var(--gris-oscuro);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin: 18px 0;
+            border: 2px solid #E2E8F0;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .item-curso {
+            padding: 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+        }
+
+        .item-curso.bloqueado {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+            opacity: 0.75;
+        }
+
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+        .badge.hecho { background: #D4EDDA; color: #155724; }
+        .badge.desaprobado { background: #F8D7DA; color: #721C24; }
+        .badge.proceso { background: #FEF3C7; color: #92400E; }
+        .badge.bloqueado-txt { background: #E2E8F0; color: #64748B; font-size: 12px; }
+        .badge.categoria-user { background: #E2E8F0; color: var(--gris-oscuro); margin-left: 0; }
+        
+        .btn-play { background: var(--gris-oscuro); color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .btn-play:hover { background: var(--rojo-loginter); }
+
+        .opcion-label {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            background: var(--gris-fondo);
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .opcion-label:hover {
+            background: #E2E8F0;
+            border-color: #CBD5E1;
+        }
+        .opcion-label input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--rojo-loginter);
+            cursor: pointer;
+        }
+        .opcion-marker {
+            background: var(--gris-oscuro);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .opcion-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            background-color: #E2E8F0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            background-color: var(--rojo-loginter);
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .step-content { display: none; line-height: 1.7; font-size: 16px; }
+        .step-content.active { display: block; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 20px;
+        }
+
+        .btn-nav {
+            background-color: #E2E8F0;
+            color: var(--gris-oscuro);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-nav.next { background-color: var(--gris-oscuro); color: white; }
+        .btn-nav.next:hover { background-color: var(--rojo-loginter); }
+
+        /* MODALES E INTERFACES DE DIÁLOGO PERSONALIZADOS */
+        .custom-dialog-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeInEase 0.2s ease-out;
+        }
+        .custom-dialog {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+        .dialog-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--gris-oscuro);
+        }
+        .dialog-message {
+            font-size: 14px;
+            color: #475569;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+        .dialog-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-dialog-confirm {
+            background-color: var(--rojo-loginter);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-dialog-confirm:hover { background-color: var(--rojo-hover); }
+        .btn-dialog-cancel {
+            background-color: #E2E8F0;
+            color: #475569;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-dialog-cancel:hover { background-color: #CBD5E1; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h2><i class="fa-solid fa-sliders"></i> Panel de Administración SBU4 🛠️</h2>
-    </header>
-
-    <div class="admin-container">
-        <div class="grid">
-            <div class="card">
-                <h3><i class="fa-solid fa-folder-plus"></i> Nueva Capacitación</h3>
-                <form id="formMultiPregunta">
-                    <label><strong>Título 🎯</strong></label>
-                    <input type="text" id="tituloModulo" required>
-                    
-                    <label><strong>Categorías Destino 👥</strong></label>
-                    <select id="categoriaCurso" multiple required>
-                        <option value="Todas">🌍 Todas (Toda la nómina)</option>
-                        <option value="Rep">Rep</option>
-                        <option value="PS">PS</option>
-                        <option value="Team Leader">Team Leader</option>
-                        <option value="Jefe/Responsable/Gerente">Jefe/Responsable/Gerente</option>
-                        <option value="Ninguna">🔒 Ninguna (Acceso Abierto Completo)</option>
-                    </select>
-                    <span class="hint-text">Usa Ctrl o Cmd para seleccionar varias.</span>
-
-                    <label><strong>Orden 🔢</strong></label>
-                    <input type="number" id="ordenModulo" required>
-
-                    <label><strong>Contenido de Lectura 📝</strong></label>
-                    <textarea id="contenidoModulo" rows="6" required></textarea>
-
-                    <h4><i class="fa-solid fa-list-ol"></i> Cuestionarios (Hasta 10 preguntas)</h4>
-                    <div class="banco-preguntas-scroll">
-                        <div class="seccion-pregunta">
-                            <strong>Pregunta 1 (Obligatoria)</strong>
-                            <input type="text" id="p1_preg" required placeholder="Pregunta"><input type="text" id="p1_corr" required placeholder="Correcta"><input type="text" id="p1_inc" required placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta">
-                            <strong>Pregunta 2 (Obligatoria)</strong>
-                            <input type="text" id="p2_preg" required placeholder="Pregunta"><input type="text" id="p2_corr" required placeholder="Correcta"><input type="text" id="p2_inc" required placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 3 (Opcional)</strong>
-                            <input type="text" id="p3_preg" placeholder="Pregunta 3"><input type="text" id="p3_corr" placeholder="Correcta"><input type="text" id="p3_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 4 (Opcional)</strong>
-                            <input type="text" id="p4_preg" placeholder="Pregunta 4"><input type="text" id="p4_corr" placeholder="Correcta"><input type="text" id="p4_inc" placeholder="Incorrecta">
-                        </div>
-                        <div class="seccion-pregunta" style="border-left-color: #64748B;">
-                            <strong>Pregunta 5 (Opcional)</strong>
-                            <input type="text" id="p5_preg" placeholder="Pregunta 5"><input type="text" id="p5_corr" placeholder="Correcta"><input type="text" id="p5_inc" placeholder="Incorrecta">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" style="margin-top:15px;">Publicar Capacitación 🚀</button>
-                </form>
-            </div>
-
-            <div>
-                <div class="card" style="border-left: 4px solid var(--verde-sheets);">
-                    <h3><i class="fa-solid fa-file-excel"></i> Sincronización Google Sheets</h3>
-                    <input type="text" id="sheetsUrlInput" placeholder="Enlace del Google Sheets...">
-                    <button id="btnSincronizar" class="btn-submit" style="background-color: var(--verde-sheets);">Sincronizar Personal</button>
-                </div>
-
-                <div class="card">
-                    <h3><i class="fa-solid fa-chart-line"></i> Control de Legajos</h3>
-                    <div style="overflow-x:auto; max-height: 380px;">
-                        <table>
-                            <thead>
-                                <tr><th>DNI / Datos</th><th>Cargo</th><th>Estado General</th><th>Historial</th><th>Acciones</th></tr>
-                            </thead>
-                            <tbody id="tablaParticipantes"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <div id="welcomeBanner" class="welcome-banner">
+        <span class="welcome-emoji">👋</span>
+        <div>
+            <h4 id="welcomeName" style="margin: 0; font-size: 15px; font-weight: 700;">¡Hola!</h4>
+            <p style="margin: 2px 0 0 0; font-size: 12px; color: #475569;">Es un gusto tenerte de vuelta en la Academia.</p>
         </div>
+    </div>
 
-        <div class="card">
-            <h3><i class="fa-solid fa-layer-group"></i> Gestor de Documentos</h3>
-            <div style="overflow-x:auto;">
-                <table>
-                    <thead>
-                        <tr><th>Orden</th><th>Tipo</th><th>Identificador</th><th>Categorías</th><th>Estado</th><th>Controles</th></tr>
-                    </thead>
-                    <tbody id="tablaModulos"></tbody>
-                </table>
+    <div id="customDialogOverlay" class="custom-dialog-overlay">
+        <div class="custom-dialog">
+            <h4 class="dialog-title" id="dialogTitle">Aviso del Sistema</h4>
+            <p class="dialog-message" id="dialogMessage">¿Deseas realizar esta acción?</p>
+            <div class="dialog-actions">
+                <button class="btn-dialog-cancel" id="btnDialogCancel">Cancelar</button>
+                <button class="btn-dialog-confirm" id="btnDialogConfirm">Aceptar</button>
             </div>
         </div>
     </div>
 
-    <div id="modalGestion" class="modal-overlay">
-        <div class="modal-content">
-            <h3 style="border-bottom: 2px solid var(--rojo-loginter); color: var(--gris-oscuro);">
-                <i class="fa-solid fa-gear"></i> Modificar Contenido de Capacitación
-            </h3>
-            <input type="hidden" id="edit_id">
-            <input type="hidden" id="edit_tipo">
+    <header>
+        <h2 class="logo-txt"><i class="fa-solid fa-truck-flatbed"></i> LOGINTER <span>ACADEMIA SVC SBU4 🚛</span></h2>
+        <div id="userInfo" class="user-panel"></div>
+    </header>
 
-            <label><strong>Orden del Módulo 🔢</strong></label>
-            <input type="number" step="0.01" id="edit_orden" required>
+    <div id="loginSection" class="container landing-card fade-in">
+        <span class="alpha-badge"><i class="fa-solid fa-flask"></i> VERSIÓN ALPHA 0.4</span>
+        
+        <i class="fa-solid fa-graduation-cap" style="font-size: 60px; color: var(--rojo-loginter); margin-bottom: 15px; display:block;"></i>
+        <h2>¡Te damos la bienvenida! 👋</h2>
+        <p style="color: var(--gris-texto); font-size: 15px; margin-bottom: 25px;">
+            Tu portal centralizado de entrenamiento operativo y desarrollo profesional continuo.
+        </p>
 
-            <label><strong>Identificador (Título / Pregunta) 🎯</strong></label>
-            <input type="text" id="edit_identificador" required>
+        <div style="background: #FFF; border: 1px solid #E2E8F0; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px;">
+            <label style="font-weight: 600; font-size: 14px; color: var(--gris-oscuro);">🪪 Ingresá tu número de DNI para comenzar:</label>
+            <input type="number" id="dniInput" placeholder="Ej: 35123456 (sin puntos ni espacios)">
+            <button class="btn-loginter" id="btnIngresar">Ingresar a la Academia 🚀</button>
+        </div>
 
-            <label id="labelContenido font-weight:bold;"><strong>Texto de la Capacitación / Contenido 📝</strong></label>
-            <textarea id="edit_contenido" rows="5"></textarea>
+        <div class="mensaje-calido">
+            📌 <strong>La importancia de seguir aprendiendo:</strong><br>
+            En Loginter creemos fuertemente que la <strong>gestión del conocimiento</strong> es la herramienta clave para que trabajemos de forma más segura, eficiente y coordinada. Cada capacitación refuerza nuestro valor como equipo. <br><br>
+            🛠️ <em>Nota: Esta plataforma se encuentra actualmente en <strong>Fase Alpha de desarrollo (Versión 0.4)</strong>. Estamos trabajando continuamente en añadir mejoras visuales y técnicas para darte la mejor experiencia posible, integrando herramientas dinámicas e interfaces más amigables. ¡Gracias por formar parte e impulsar nuestro crecimiento colectivo!</em>
+        </div>
+    </div>
 
-            <label><strong>Estado de Disponibilidad (Selección Única) 🔒</strong></label>
-            <div class="checkbox-group">
-                <label class="checkbox-item">
-                    <input type="checkbox" id="status_activo" class="single-status-check"> 🟢 Activado (Visible en plataforma)
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" id="status_desactivado" class="single-status-check"> 🔴 Desactivado (Ocultar curso y evaluaciones)
-                </label>
-            </div>
+    <div id="menuSection" class="container fade-in" style="display: none;">
+        <h3 style="margin-top: 0; color: var(--gris-oscuro); border-bottom: 2px solid var(--gris-fondo); padding-bottom: 10px;">
+            <i class="fa-solid fa-clipboard-list"></i> Grilla General de Capacitaciones
+        </h3>
+        <div id="listaCursos"></div>
+    </div>
 
-            <label><strong>Categorías Jerárquicas Necesarias (Selección Múltiple) 👥</strong></label>
-            <div class="checkbox-group" style="background: #F8FAFC; padding: 12px; border-radius: 6px;">
-                <label class="checkbox-item"><input type="checkbox" id="cat_all" class="cat-check"> 🌍 Todas (Acceso a toda la nómina)</label>
-                <label class="checkbox-item"><input type="checkbox" value="Rep" class="cat-check"> Rep</label>
-                <label class="checkbox-item"><input type="checkbox" value="PS" class="cat-check"> PS</label>
-                <label class="checkbox-item"><input type="checkbox" value="Team Leader" class="cat-check"> Team Leader</label>
-                <label class="checkbox-item"><input type="checkbox" value="Jefe/Responsable/Gerente" class="cat-check"> Jefe/Responsable/Gerente</label>
-                <label class="checkbox-item"><input type="checkbox" id="cat_none" class="cat-check"> 🔓 Ninguna (Cualquiera que ingrese)</label>
-            </div>
+    <div id="appSection" class="container fade-in" style="display: none;">
+        <div style="display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
+            <button id="btnAbandonarCurso" class="btn-abandonar">
+                <i class="fa-solid fa-arrow-left"></i> ❌ Abandonar Curso
+            </button>
+            <button id="btnReiniciarCurso" class="btn-reintentar">
+                <i class="fa-solid fa-rotate-left"></i> 🔄 Reiniciar Capacitación
+            </button>
+        </div>
 
-            <div class="modal-actions">
-                <button type="button" class="btn-close-modal" id="btnCancelarModal">Cancelar</button>
-                <button type="button" class="btn-submit" id="btnGuardarModal" style="width: auto; padding: 10px 25px;">Guardar Cambios 💾</button>
-            </div>
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div id="dinamicModules"></div>
+        <div class="nav-buttons">
+            <button class="btn-nav" id="btnAtras" disabled>⬅️ Anterior</button>
+            <button class="btn-nav next" id="btnSiguiente">Siguiente Módulo ➡️</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBP4RtOPx_T12H88x_Zy_TJP5ykhQONF8s",
@@ -203,309 +492,362 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Controladores para selección única del estado en el modal
-        document.querySelectorAll('.single-status-check').forEach(box => {
-            box.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    document.querySelectorAll('.single-status-check').forEach(b => { if(b !== e.target) b.checked = false; });
+        let usuarioDNI = "";
+        let usuarioCategoria = "Rep"; 
+        let cursoActualTitulo = "";
+        let pasoActual = 0;
+        let totalPasos = 0;
+        let modulosDelCurso = [];
+        let respuestasCorrectasTotales = 0;
+        let preguntasEvaluadasCount = 0;
+        let opcionCorrectaActualVal = ""; 
+
+        function customAlert(message) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customDialogOverlay');
+                const title = document.getElementById('dialogTitle');
+                const msg = document.getElementById('dialogMessage');
+                const btnConfirm = document.getElementById('btnDialogConfirm');
+                const btnCancel = document.getElementById('btnDialogCancel');
+
+                title.textContent = "Mensaje del Sistema";
+                msg.textContent = message;
+                btnCancel.style.display = "none";
+                btnConfirm.textContent = "Aceptar";
+                overlay.style.display = "flex";
+
+                function onConfirm() {
+                    overlay.style.display = "none";
+                    btnConfirm.removeEventListener('click', onConfirm);
+                    resolve();
                 }
+                btnConfirm.addEventListener('click', onConfirm);
             });
-        });
-
-        // Controladores de Categorías en el Modal
-        document.getElementById('cat_all').addEventListener('change', (e) => {
-            if(e.target.checked) {
-                document.getElementById('cat_none').checked = false;
-                document.querySelectorAll('.cat-check').forEach(b => { if(b.id !== 'cat_none') b.checked = true; });
-            }
-        });
-        document.getElementById('cat_none').addEventListener('change', (e) => {
-            if(e.target.checked) {
-                document.querySelectorAll('.cat-check').forEach(b => { b.checked = false; });
-                document.getElementById('cat_none').checked = true;
-            }
-        });
-
-        document.getElementById('categoriaCurso').addEventListener('change', (e) => {
-            const selectedOptions = Array.from(e.target.selectedOptions).map(o => o.value);
-            if (selectedOptions.includes('Todas')) {
-                Array.from(e.target.options).forEach(opt => { if (opt.value !== 'Ninguna') opt.selected = true; });
-            } else if (selectedOptions.includes('Ninguna')) {
-                Array.from(e.target.options).forEach(opt => { opt.selected = (opt.value === 'Ninguna'); });
-            }
-        });
-
-        function getSelectedCategories(selectElement) {
-            let selected = Array.from(selectElement.selectedOptions).map(opt => opt.value);
-            if (selected.includes('Todas')) return ["Rep", "PS", "Team Leader", "Jefe/Responsable/Gerente"];
-            if (selected.includes('Ninguna')) return [];
-            return selected;
         }
 
-        function extractSpreadsheetId(url) {
-            const matches = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            return matches ? matches[1] : null;
-        }
+        function customConfirm(message) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customDialogOverlay');
+                const title = document.getElementById('dialogTitle');
+                const msg = document.getElementById('dialogMessage');
+                const btnConfirm = document.getElementById('btnDialogConfirm');
+                const btnCancel = document.getElementById('btnDialogCancel');
 
-        function parseCSV(text) {
-            const lines = []; let row = [""]; lines.push(row); let inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                let c = text[i]; let next = text[i+1];
-                if (c === '"') { if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; } else { inQuotes = !inQuotes; } } 
-                else if (c === ',' && !inQuotes) { row.push(''); } 
-                else if ((c === '\r' || c === '\n') && !inQuotes) { if (c === '\r' && next === '\n') { i++; } row = ['']; lines.push(row); } 
-                else { row[row.length - 1] += c; }
-            }
-            return lines.filter(r => r.length > 1 || (r[0] && r[0].trim() !== ""));
-        }
+                title.textContent = "Confirmación Requerida";
+                msg.textContent = message;
+                btnCancel.style.display = "block";
+                btnConfirm.textContent = "Aceptar";
+                overlay.style.display = "flex";
 
-        document.getElementById('btnSincronizar').addEventListener('click', async () => {
-            const urlInput = document.getElementById('sheetsUrlInput').value.trim();
-            const spreadsheetId = extractSpreadsheetId(urlInput);
-            if (!spreadsheetId) return alert("⚠️ Enlace no válido.");
-
-            try {
-                const csvUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv`;
-                const response = await fetch(csvUrl);
-                const csvText = await response.text();
-                const rows = parseCSV(csvText);
-
-                const headers = rows[0].map(h => h.trim().toUpperCase());
-                const indexDni = headers.indexOf("DNI");
-                const indexCargo = headers.indexOf("CARGO");
-                const indexNombre = headers.indexOf("NOMBRE");
-                const indexApellido = headers.indexOf("APELLIDO");
-
-                let promesas = [];
-                for (let i = 1; i < rows.length; i++) {
-                    const columns = rows[i];
-                    if (!columns[indexDni] || !columns[indexCargo]) continue;
-                    const dniVal = columns[indexDni].trim().replace(/\D/g, '');
-                    const userRef = doc(db, "participantes", dniVal);
-                    promesas.push(setDoc(userRef, {
-                        dni: dniVal,
-                        nombre: columns[indexNombre] ? columns[indexNombre].trim() : "",
-                        apellido: columns[indexApellido] ? columns[indexApellido].trim() : "",
-                        categoria: columns[indexCargo].trim()
-                    }, { merge: true }));
+                function onConfirm() {
+                    overlay.style.display = "none";
+                    cleanup();
+                    resolve(true);
                 }
-                await Promise.all(promesas);
-                alert("¡Sincronización Exitosa!");
-                location.reload();
-            } catch (err) { alert("Error: " + err.message); }
-        });
-
-        document.getElementById('formMultiPregunta').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const titulo = document.getElementById('tituloModulo').value;
-            const categoriasSeleccionadas = getSelectedCategories(document.getElementById('categoriaCurso'));
-            const orden = parseInt(document.getElementById('ordenModulo').value);
-            const contenido = document.getElementById('contenidoModulo').value;
-
-            try {
-                await addDoc(collection(db, "modulos"), { titulo, categoriaAsignada: categoriasSeleccionadas, orden, contenido, tipo: 'lectura', estado: 'activo' });
-                let promesas = [];
-                for (let i = 1; i <= 5; i++) {
-                    const preg = document.getElementById(`p${i}_preg`).value.trim();
-                    const corr = document.getElementById(`p${i}_corr`).value.trim();
-                    const inc = document.getElementById(`p${i}_inc`).value.trim();
-                    if (preg !== "") {
-                        promesas.push(addDoc(collection(db, "modulos"), {
-                            orden: orden + (0.01 * i),
-                            categoriaAsignada: categoriasSeleccionadas,
-                            pregunta: preg, opcionCorrecta: corr, opcionIncorrecta: inc,
-                            tipo: 'trivia', estado: 'activo'
-                        }));
-                    }
+                function onCancel() {
+                    overlay.style.display = "none";
+                    cleanup();
+                    resolve(false);
                 }
-                await Promise.all(promesas);
-                alert("¡Guardado correctamente!");
-                location.reload();
-            } catch (err) { alert("Error al guardar."); }
-        });
+                function cleanup() {
+                    btnConfirm.removeEventListener('click', onConfirm);
+                    btnCancel.removeEventListener('click', onCancel);
+                }
+                btnConfirm.addEventListener('click', onConfirm);
+                btnCancel.addEventListener('click', onCancel);
+            });
+        }
 
-        // Configuración y apertura del modal dinámico
-        window.abrirModalGestion = function(id, tipo, orden, identificador, contenido, estado, catsJSON) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_tipo').value = tipo;
-            document.getElementById('edit_orden').value = orden;
-            document.getElementById('edit_identificador').value = identificador;
-            document.getElementById('edit_contenido').value = contenido || "";
+        document.getElementById('btnIngresar').addEventListener('click', async () => {
+            usuarioDNI = document.getElementById('dniInput').value.trim();
+            if(!usuarioDNI) return customAlert("⚠️ Por favor, ingresa tu DNI para continuar.");
 
-            if(tipo === 'trivia') {
-                document.getElementById('edit_contenido').style.display = "none";
-                document.getElementById('labelContenido').style.display = "none";
+            const userRef = doc(db, "participantes", usuarioDNI);
+            const userSnap = await getDoc(userRef);
+            let nombreCompleto = "";
+
+            if (userSnap.exists()) {
+                usuarioCategoria = userSnap.data().categoria || "Rep";
+                const nombre = userSnap.data().nombre || "";
+                const apellido = userSnap.data().apellido || "";
+                nombreCompleto = `${nombre} ${apellido}`.trim();
             } else {
-                document.getElementById('edit_contenido').style.display = "block";
-                document.getElementById('labelContenido').style.display = "block";
+                usuarioCategoria = "Rep";
+                await setDoc(userRef, {
+                    dni: usuarioDNI,
+                    categoria: "Rep",
+                    completado: false,
+                    pruebaAprobada: "Pendiente",
+                    historialCursos: {}
+                }, { merge: true });
             }
 
-            if(estado === 'desactivado') {
-                document.getElementById('status_desactivado').checked = true;
-                document.getElementById('status_activo').checked = false;
-            } else {
-                document.getElementById('status_activo').checked = true;
-                document.getElementById('status_desactivado').checked = false;
-            }
-
-            // Reset de checkboxes de categorías
-            document.querySelectorAll('.cat-check').forEach(b => b.checked = false);
-            let categorias = [];
-            try { categorias = JSON.parse(decodeURIComponent(catsJSON)); } catch(e){}
-
-            if(categorias.length === 0) {
-                document.getElementById('cat_none').checked = true;
-            } else if(categorias.includes("Rep") && categorias.includes("PS") && categorias.includes("Team Leader") && categorias.includes("Jefe/Responsable/Gerente")) {
-                document.getElementById('cat_all').checked = true;
-                document.querySelectorAll('.cat-check').forEach(b => { if(b.id !== 'cat_none') b.checked = true; });
-            } else {
-                document.querySelectorAll('.cat-check').forEach(b => {
-                    if(categorias.includes(b.value)) b.checked = true;
-                });
-            }
-
-            document.getElementById('modalGestion').style.display = "flex";
-        }
-
-        document.getElementById('btnCancelarModal').addEventListener('click', () => {
-            document.getElementById('modalGestion').style.display = "none";
-        });
-
-        document.getElementById('btnGuardarModal').addEventListener('click', async () => {
-            const id = document.getElementById('edit_id').value;
-            const tipo = document.getElementById('edit_tipo').value;
-            const orden = parseFloat(document.getElementById('edit_orden').value);
-            const identificador = document.getElementById('edit_identificador').value;
-            const contenido = document.getElementById('edit_contenido').value;
-
-            let nuevoEstado = document.getElementById('status_desactivado').checked ? 'desactivado' : 'activo';
-
-            let categoriasSeleccionadas = [];
-            if(!document.getElementById('cat_none').checked) {
-                if(document.getElementById('cat_all').checked) {
-                    categoriasSeleccionadas = ["Rep", "PS", "Team Leader", "Jefe/Responsable/Gerente"];
-                } else {
-                    document.querySelectorAll('.cat-check').forEach(b => {
-                        if(b.checked && b.value) categoriasSeleccionadas.push(b.value);
-                    });
-                }
-            }
-
-            try {
-                let dataUpdate = {
-                    orden: orden,
-                    estado: nuevoEstado,
-                    categoriaAsignada: categoriasSeleccionadas
-                };
-
-                if(tipo === 'lectura') {
-                    dataUpdate.titulo = identificador;
-                    dataUpdate.contenido = contenido;
-                } else {
-                    dataUpdate.pregunta = identificador;
-                }
-
-                // Guardar el elemento principal
-                await updateDoc(doc(db, "modulos", id), dataUpdate);
-
-                // Cascada: Si se desactiva una lectura, se desactivan automáticamente las trivias con el mismo orden base entero
-                if(tipo === 'lectura' && nuevoEstado === 'desactivado') {
-                    const baseOrden = Math.floor(orden);
-                    const querySnapshot = await getDocs(collection(db, "modulos"));
-                    let promesasCascada = [];
-                    querySnapshot.forEach(d => {
-                        if(d.id !== id && Math.floor(d.data().orden) === baseOrden) {
-                            promesasCascada.push(updateDoc(doc(db, "modulos", d.id), { estado: 'desactivado' }));
-                        }
-                    });
-                    if(promesasCascada.length > 0) await Promise.all(promesasCascada);
-                }
-
-                alert("¡Cambios y dependencias actualizados con éxito!");
-                document.getElementById('modalGestion').style.display = "none";
-                location.reload();
-            } catch(e) {
-                alert("Error al actualizar: " + e.message);
-            }
-        });
-
-        async function cargarDatosAdmin() {
-            const tbodyPart = document.getElementById('tablaParticipantes');
-            const snapPart = await getDocs(collection(db, "participantes"));
+            const welcomeBanner = document.getElementById('welcomeBanner');
+            const welcomeName = document.getElementById('welcomeName');
+            welcomeName.textContent = nombreCompleto ? `¡Bienvenido/a, ${nombreCompleto}!` : `¡Bienvenido/a, Legajo ${usuarioDNI}!`;
             
-            snapPart.forEach(docSnap => {
-                const p = docSnap.data();
-                const tr = document.createElement('tr');
-                let cursosHechos = p.historialCursos || {};
-                let keys = Object.keys(cursosHechos);
-                let estadoBadge = `<span class="badge success">Terminado ✅</span>`;
+            welcomeBanner.classList.add('show');
+            setTimeout(() => { welcomeBanner.classList.remove('show'); }, 4000);
+
+            document.getElementById('userInfo').innerHTML = `
+                <span>👤 DNI: <strong>${usuarioDNI}</strong></span>
+                <span class="badge categoria-user">🏷️ Cargo: ${usuarioCategoria}</span>
+                <button id="btnLogOut" class="btn-logout"><i class="fa-solid fa-door-open"></i> Salir</button>
+            `;
+            
+            document.getElementById('btnLogOut').addEventListener('click', () => { cerrarSesionCompleta(); });
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'block';
+
+            await cargarMenuCapacitaciones();
+        });
+
+        function cerrarSesionCompleta() {
+            usuarioDNI = "";
+            usuarioCategoria = "Rep";
+            document.getElementById('dniInput').value = "";
+            document.getElementById('userInfo').innerHTML = "";
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('appSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        }
+
+        document.getElementById('btnAbandonarCurso').addEventListener('click', async () => {
+            const seguro = await customConfirm("⚠️ ¿Estás seguro de que deseas salir?\n\nTu progreso quedará guardado como 'Incompleto'.");
+            if (seguro) {
+                const userRef = doc(db, "participantes", usuarioDNI);
+                const userSnap = await getDoc(userRef);
+                let historialExistente = {};
+                if (userSnap.exists()) { historialExistente = userSnap.data().historialCursos || {}; }
                 
-                if (keys.length === 0) estadoBadge = `<span class="badge danger" style="background:#E2E8F0; color:#64748B;">Sin cursar 📭</span>`;
-                else if (keys.some(k => cursosHechos[k] === "Cursando ⏳")) estadoBadge = `<span class="badge warning">Cursando ⏳</span>`;
-                else if (keys.some(k => cursosHechos[k] === "Incompleto ⚠️")) estadoBadge = `<span class="badge danger">Incompleto ⚠️</span>`;
+                historialExistente[cursoActualTitulo] = "Incompleto ⚠️";
+                await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
 
-                let historialStr = keys.length > 0 ? keys.map(k => `• ${k}: ${cursosHechos[k]}`).join('<br>') : 'Sin intentos';
+                document.getElementById('appSection').style.display = 'none';
+                document.getElementById('menuSection').style.display = 'block';
+                await cargarMenuCapacitaciones();
+            }
+        });
 
-                tr.innerHTML = `
-                    <td><strong>${p.dni}</strong><br><span style='font-size:11px;'>${p.apellido || ''}, ${p.nombre || ''}</span></td>
-                    <td><span class="badge info">${p.categoria || 'Rep'}</span></td>
-                    <td>${estadoBadge}</td>
-                    <td style="font-size:11px;">${historialStr}</td>
-                    <td>
-                        <select class="select-acciones" data-id="${docSnap.id}">
-                            <option value="" disabled selected>Acciones...</option>
-                            <option value="resetear">🗑️ Resetear (Sin Cursar)</option>
-                            <option value="borrar">❌ Borrar Legajo</option>
-                        </select>
-                    </td>
-                `;
-                tbodyPart.appendChild(tr);
+        document.getElementById('btnReiniciarCurso').addEventListener('click', async () => {
+            const seguro = await customConfirm("🔄 ¿Deseas reiniciar esta capacitación por completo?");
+            if (seguro) {
+                await ejecutarReintentoAccion(cursoActualTitulo);
+            }
+        });
+
+        async function ejecutarReintentoAccion(tituloCurso) {
+            const userRef = doc(db, "participantes", usuarioDNI);
+            const userSnap = await getDoc(userRef);
+            let historialExistente = {};
+            if (userSnap.exists()) { historialExistente = userSnap.data().historialCursos || {}; }
+            
+            historialExistente[tituloCurso] = "Cursando ⏳";
+            await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
+            cursoActualTitulo = tituloCurso;
+            await iniciarCursoEspecifico(tituloCurso);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        async function cargarMenuCapacitaciones() {
+            const container = document.getElementById('listaCursos');
+            container.innerHTML = "⏳ Organizando tu grilla corporativa...";
+
+            const historialRef = doc(db, "participantes", usuarioDNI);
+            const historialSnap = await getDoc(historialRef);
+            let cursosHechos = {};
+            if(historialSnap.exists()) { cursosHechos = historialSnap.data().historialCursos || {}; }
+
+            const querySnapshot = await getDocs(collection(db, "modulos"));
+            let codigosVistos = new Set();
+            let listaModulosLectura = [];
+
+            querySnapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.estado === "desactivado") return;
+                if (data.tipo === 'lectura' && !codigosVistos.has(data.titulo)) {
+                    codigosVistos.add(data.titulo);
+                    listaModulosLectura.push(data);
+                }
             });
 
-            document.querySelectorAll('.select-acciones').forEach(sel => {
-                sel.addEventListener('change', async (e) => {
-                    const acc = e.target.value; const id = e.target.getAttribute('data-id');
-                    if (acc === 'resetear') {
-                        if(confirm("¿Restablecer este usuario a 'Sin Cursar'?")) {
-                            await updateDoc(doc(db, "participantes", id), { completado: false, historialCursos: {} });
-                            location.reload();
-                        }
-                    } else if (acc === 'borrar') {
-                        if(confirm("¿Borrar legajo permanente?")) { await deleteDoc(doc(db, "participantes", id)); location.reload(); }
-                    }
+            container.innerHTML = "";
+            if(listaModulosLectura.length === 0) {
+                container.innerHTML = `<p style="color:var(--gris-texto); text-align:center; padding:20px;">ℹ️ Últimas capacitaciones dadas de alta no disponibles.</p>`;
+                return;
+            }
+
+            listaModulosLectura.forEach(curso => {
+                const div = document.createElement('div');
+                let categoriesDestino = Array.isArray(curso.categoriaAsignada) ? curso.categoriaAsignada : [curso.categoriaAsignada];
+                
+                const tieneAccAccess = categoriesDestino.length === 0 || 
+                                       categoriesDestino.includes("Ninguna") || 
+                                       categoriesDestino.includes("Todas") || 
+                                       categoriesDestino.includes(usuarioCategoria);
+                                       
+                const estadoCurso = cursosHechos[curso.titulo] || "Sin cursar";
+
+                if (!tieneAccAccess) {
+                    div.className = "item-curso bloqueado";
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><span class="badge bloqueado-txt"><i class="fa-solid fa-lock"></i> No disponible para su perfil</span>`;
+                } else if (estadoCurso === "Cursando ⏳" || estadoCurso === "Incompleto ⚠️") {
+                    div.className = "item-curso";
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><div style="display:flex; align-items:center; gap:10px;"><span class="badge proceso"><i class="fa-solid fa-circle-exclamation"></i> Iniciada, sin completar ⏳</span><button class="btn-play" data-titulo="${curso.titulo}" style="background:#D97706;"><i class="fa-solid fa-play"></i> Continuar</button></div>`;
+                } else if (estadoCurso.includes("Aprobado") || estadoCurso.includes("Desaprobado")) {
+                    div.className = "item-curso";
+                    let badgeClass = estadoCurso.includes("Desaprobado") ? "badge desaprobado" : "badge hecho";
+                    div.innerHTML = `
+                        <div>📄 <strong>${curso.titulo}</strong></div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="${badgeClass}">🎉 Estado: ${estadoCurso}</span>
+                            <button class="btn-grilla-reintentar" data-reintentar-titulo="${curso.titulo}"><i class="fa-solid fa-arrow-rotate-left"></i> Reintentar</button>
+                        </div>`;
+                } else {
+                    div.className = "item-curso";
+                    div.innerHTML = `<div>📄 <strong>${curso.titulo}</strong></div><button class="btn-play" data-titulo="${curso.titulo}"><i class="fa-solid fa-play"></i> Iniciar Test</button>`;
+                }
+                container.appendChild(div);
+            });
+
+            document.querySelectorAll('.btn-play').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    cursoActualTitulo = e.target.getAttribute('data-titulo');
+                    iniciarCursoEspecifico(cursoActualTitulo);
                 });
             });
 
-            const tbodyMod = document.getElementById('tablaModulos');
-            const snapMod = await getDocs(collection(db, "modulos"));
-            let modulos = []; snapMod.forEach(d => modulos.push({id: d.id, ...d.data()}));
-            modulos.sort((a,b) => a.orden - b.orden);
-
-            modulos.forEach(m => {
-                const tr = document.createElement('tr');
-                let cats = Array.isArray(m.categoriaAsignada) ? m.categoriaAsignada : [];
-                let catsStr = cats.length === 0 ? 'Ninguna (Abierto)' : cats.join(', ');
-                let identificadorText = m.tipo === 'lectura' ? m.titulo : m.pregunta;
-                let contenidoLimpio = m.tipo === 'lectura' ? (m.contenido || "").replace(/'/g, "\\'") : "";
-                let catsJSON = encodeURIComponent(JSON.stringify(cats));
-                let estadoActual = m.estado || 'activo';
-
-                tr.innerHTML = `
-                    <td><strong>${m.orden}</strong></td>
-                    <td><span class="badge ${m.tipo === 'lectura' ? 'info' : 'warning'}">${m.tipo.toUpperCase()}</span></td>
-                    <td>${identificadorText}</td>
-                    <td><span style="font-size:11px;">${catsStr}</span></td>
-                    <td><span class="badge ${estadoActual === 'activo' ? 'success' : 'danger'}">${estadoActual.toUpperCase()}</span></td>
-                    <td>
-                        <button class="btn-control" onclick="abrirModalGestion('${m.id}', '${m.tipo}', ${m.orden}, '${identificadorText.replace(/'/g, "\\'")}', '${contenidoLimpio.replace(/\n/g, '\\n')}', '${estadoActual}', '${catsJSON}')">
-                            <i class="fa-solid fa-gear"></i> Gestionar
-                        </button>
-                    </td>
-                `;
-                tbodyMod.appendChild(tr);
+            document.querySelectorAll('.btn-grilla-reintentar').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const tit = e.currentTarget.getAttribute('data-reintentar-titulo');
+                    const seguro = await customConfirm(`🔄 ¿Deseas volver a intentar la capacitación "${tit}"?`);
+                    if(seguro) {
+                        await ejecutarReintentoAccion(tit);
+                    }
+                });
             });
         }
-        window.onload = cargarDatosAdmin;
+
+        async function iniciarCursoEspecifico(tituloCurso) {
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('appSection').style.display = 'block';
+
+            const querySnapshot = await getDocs(collection(db, "modulos"));
+            let lecturas = [];
+            let trivias = [];
+            preguntasEvaluadasCount = 0;
+            pasoActual = 0;
+            respuestasCorrectasTotales = 0;
+
+            let ordenBase = 0;
+            querySnapshot.forEach(d => {
+                if(d.data().titulo === tituloCurso && d.data().tipo === 'lectura') { ordenBase = Math.floor(d.data().orden); }
+            });
+
+            querySnapshot.forEach(d => {
+                const data = d.data();
+                if(Math.floor(data.orden) === ordenBase && data.estado !== "desactivado") {
+                    const item = { id: d.id, ...data };
+                    if (data.tipo === 'lectura') { lecturas.push(item); } 
+                    else if (data.tipo === 'trivia') { trivias.push(item); }
+                }
+            });
+
+            const userRef = doc(db, "participantes", usuarioDNI);
+            const userSnap = await getDoc(userRef);
+            let historialExistente = userSnap.exists() ? (userSnap.data().historialCursos || {}) : {};
+            
+            if (!historialExistente[tituloCurso] || (!historialExistente[tituloCurso].includes("Aprobado") && !historialExistente[tituloCurso].includes("Desaprobado"))) {
+                historialExistente[tituloCurso] = "Cursando ⏳";
+                await setDoc(userRef, { historialCursos: historialExistente }, { merge: true });
+            }
+
+            const bancoPreguntasSorteado = shuffleArray(trivias).slice(0, 2);
+            preguntasEvaluadasCount = bancoPreguntasSorteado.length;
+
+            modulosDelCurso = [...lecturas, ...bancoPreguntasSorteado];
+            modulosDelCurso.sort((a, b) => a.orden - b.orden);
+            totalPasos = modulosDelCurso.length;
+            renderizarPaso();
+        }
+
+        function renderizarPaso() {
+            const container = document.getElementById('dinamicModules');
+            container.innerHTML = "";
+            const item = modulosDelCurso[pasoActual];
+            if(!item) return;
+
+            const div = document.createElement('div');
+            div.className = "step-content active";
+
+            if (item.tipo === 'trivia') {
+                const esCorrectaPrimero = Math.random() < 0.5;
+                const opcA = esCorrectaPrimero ? item.opcionCorrecta : item.opcionIncorrecta;
+                const opcB = esCorrectaPrimero ? item.opcionIncorrecta : item.opcionCorrecta;
+                opcionCorrectaActualVal = esCorrectaPrimero ? "A" : "B";
+
+                div.innerHTML = `
+                    <h3 style="color:var(--rojo-loginter)"><i class="fa-solid fa-file-question"></i> Evaluación</h3>
+                    <p style="font-size:17px; font-weight:600; margin-bottom: 20px;">❓ ${item.pregunta}</p>
+                    <label class="opcion-label"><input type="radio" name="triviaOpc" value="A"><span class="opcion-marker">A</span><span class="opcion-text">${opcA}</span></label>
+                    <label class="opcion-label"><input type="radio" name="triviaOpc" value="B"><span class="opcion-marker">B</span><span class="opcion-text">${opcB}</span></label>
+                `;
+            } else {
+                div.innerHTML = `
+                    <h3 style="color: var(--rojo-loginter); margin-top:0;">📖 ${item.titulo}</h3>
+                    <p style="white-space: pre-wrap; color: #4A5568; font-size:16px;">${item.contenido}</p>
+                `;
+            }
+            container.appendChild(div);
+
+            document.getElementById('btnAtras').disabled = pasoActual === 0;
+            const porcentaje = totalPasos > 1 ? (pasoActual / (totalPasos - 1)) * 100 : 100;
+            document.getElementById('progressBar').style.width = `${porcentaje}%`;
+            document.getElementById('btnSiguiente').textContent = (pasoActual === totalPasos - 1) ? "🏁 Finalizar" : "Siguiente Módulo ➡️";
+        }
+
+        document.getElementById('btnAtras').addEventListener('click', () => {
+            if (pasoActual > 0) { pasoActual--; renderizarPaso(); }
+        });
+
+        document.getElementById('btnSiguiente').addEventListener('click', async () => {
+            const item = modulosDelCurso[pasoActual];
+            if (item && item.tipo === 'trivia') {
+                const seleccionada = document.querySelector('input[name="triviaOpc"]:checked');
+                if (!seleccionada) return customAlert("⚠️ Por favor, selecciona una opción antes de avanzar.");
+                if (seleccionada.value === opcionCorrectaActualVal) { respuestasCorrectasTotales++; }
+            }
+
+            if (pasoActual === totalPasos - 1) {
+                let aprueba = respuestasCorrectasTotales >= (preguntasEvaluadasCount / 2) ? "Aprobado ✅" : "Desaprobado ❌";
+                let glosaResultado = `${aprueba} (${respuestasCorrectasTotales}/${preguntasEvaluadasCount})`;
+
+                const userRef = doc(db, "participantes", usuarioDNI);
+                const userSnap = await getDoc(userRef);
+                let historialExistente = userSnap.exists() ? (userSnap.data().historialCursos || {}) : {};
+                historialExistente[cursoActualTitulo] = glosaResultado;
+
+                await setDoc(userRef, {
+                    completado: true,
+                    historialCursos: historialExistente
+                }, { merge: true });
+
+                await customAlert(`💾 Resultado registrado con éxito:\n\n${glosaResultado}`);
+                document.getElementById('appSection').style.display = 'none';
+                document.getElementById('menuSection').style.display = 'block';
+                await cargarMenuCapacitaciones(); 
+                return;
+            }
+
+            if (pasoActual < totalPasos - 1) { pasoActual++; renderizarPaso(); }
+        });
     </script>
 </body>
 </html>
